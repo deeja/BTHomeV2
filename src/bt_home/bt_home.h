@@ -10,195 +10,206 @@
  * @brief BTHome v2 sensor data setter methods with summaries.
  */
 
+static const size_t MAX_PAYLOAD_SIZE = 31;
+
 class BtHome
 {
 public:
+
+    BtHome();
+
+
+    size_t getAdvertisementPayload(uint8_t *payload);
+    void clearMeasurementData();
+
     /**
      * @brief Set the voltage value in the packet.
      * @param voltageVolts Voltage in volts.
      */
-    void addVoltage(float voltage, VoltageRangeResolution rangeResolution);
+    bool addVoltage(float voltage, VoltageRangeResolution rangeResolution);
 
     /**
      * @brief Set a generic count value in the packet.
      * @param count Arbitrary count (e.g., event count).
      */
-    void addCount(uint32_t count);
-    void addCount(uint8_t count);
-    void addCount(uint16_t count);
-    void addCount(int8_t count);
-    void addCount(int16_t count);
-    void addCount(int32_t count);
+    bool addCount(uint32_t count);
+    bool addCount(uint8_t count);
+    bool addCount(uint16_t count);
+    bool addCount(int8_t count);
+    bool addCount(int16_t count);
+    bool addCount(int32_t count);
 
     /**
      * @brief Set the distance measurement value in the packet.
      * @param distanceMetres Distance in metres.
      */
-    void addDistanceMetres(float distanceMetres);
+    bool addDistanceMetres(float distanceMetres);
 
     /**
      * @brief Set the distance measurement value in the packet.
      * @param distanceMillimetres Distance in metres.
      */
-    void addDistanceMillimetres(float distanceMillimetres);
+    bool addDistanceMillimetres(float distanceMillimetres);
 
     /**
      * @brief Set the battery level value in the packet.
      * @param batteryPercentOrMillivolts Battery level as an unsigned 8-bit value (e.g., percentage or mV depending on implementation).
      */
-    void addBatteryPercentage(uint8_t batteryPercentage);
+    bool addBatteryPercentage(uint8_t batteryPercentage);
 
-    /**
-     * @brief Set the local Bluetooth device name.
-     * @param name The local name.
-     */
-    void addLocalName(const char *name);
+    
 
     /**
      * @brief Set the temperature value in the packet.
      * @param degreesCelsius Temperature in degrees Celsius.
      * @param rangeResolution The temperature range and resolution.
      */
-    void addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution);
+    bool addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution);
 
     /**
      * @brief Set the humidity value in the packet.
      * @param humidityPercent Relative humidity in percent.
      */
-    void addHumidity(float humidityPercent);
+    bool addHumidity(float humidityPercent);
 
     /**
      * @brief Set the illuminance (light level) value in the packet.
      * @param illuminanceLux Ambient light in lux.
      */
-    void addIlluminance(float illuminanceLux);
+    bool addIlluminance(float illuminanceLux);
 
     /**
      * @brief Set the button state in the packet.
      * @param buttonState Button state as an unsigned 8-bit value (e.g., pressed/released).
      */
-    void addButton(uint8_t buttonState);
+    bool addButton(uint8_t buttonState);
 
     /**
      * @brief Set the soil moisture value in the packet.
      * @param moisturePercent Moisture level as a float (e.g., percentage).
      */
-    void addMoisture(float moisturePercent);
+    bool addMoisture(float moisturePercent);
 
     /**
      * @brief Set the conductivity value in the packet.
      * @param conductivityMicroSiemensCm Electrical conductivity in µS/cm.
      */
-    void addConductivity(uint16_t conductivityMicroSiemensCm);
+    bool addConductivity(uint16_t conductivityMicroSiemensCm);
 
     /**
      * @brief Set the power (wattage) value in the packet.
      * @param powerWatts Power in watts.
      */
-    void addPower(float powerWatts);
+    bool addPower(float powerWatts);
 
     /**
      * @brief Set the energy consumption value in the packet.
      * @param energyWattHours Energy in watt-hours.
      */
-    void addEnergy(float energyWattHours);
+    bool addEnergy(float energyWattHours);
 
     /**
      * @brief Set the current value in the packet.
      * @param currentAmperes Current in amperes.
      */
-    void addCurrent(float currentAmperes);
+    bool addCurrent(float currentAmperes);
 
     /**
      * @brief Set the particulate matter (PM2.5) value in the packet.
      * @param pm2_5MicrogramsM3 PM2.5 concentration in µg/m³.
      */
-    void addPM2_5(uint16_t pm2_5MicrogramsM3);
+    bool addPM2_5(uint16_t pm2_5MicrogramsM3);
 
     /**
      * @brief Set the particulate matter (PM10) value in the packet.
      * @param pm10MicrogramsM3 PM10 concentration in µg/m³.
      */
-    void addPM10(uint16_t pm10MicrogramsM3);
+    bool addPM10(uint16_t pm10MicrogramsM3);
 
     /**
      * @brief Set the CO₂ concentration value in the packet.
      * @param co2PPM Carbon dioxide concentration in ppm.
      */
-    void addCO2(uint16_t co2PPM);
+    bool addCO2(uint16_t co2PPM);
 
     /**
      * @brief Set the total volatile organic compounds (TVOC) value in the packet.
      * @param tvocPPB TVOC concentration in ppb.
      */
-    void addTVOC(uint16_t tvocPPB);
+    bool addTVOC(uint16_t tvocPPB);
 
     /**
      * @brief Set the atmospheric pressure value in the packet.
      * @param pressureHpa Pressure in hPa.
      */
-    void addPressure(float pressureHpa);
+    bool addPressure(float pressureHpa);
 
     /**
      * @brief Set the weight measurement value in the packet.
      * @param weightKg Weight in kilograms or grams depending on implementation.
      */
-    void addWeight(float weightKg);
+    bool addWeight(float weightKg);
 
     /**
      * @brief Set the volume measurement value in the packet.
      * @param volumeLitres Volume in litres or cubic metres depending on implementation.
      */
-    void addVolume(float volumeLitres);
+    bool addVolume(float volumeLitres);
 
     /**
      * @brief Set a duration value in the packet.
      * @param durationSeconds Duration in seconds or milliseconds depending on implementation.
      */
-    void addDuration(uint32_t durationSeconds);
+    bool addDuration(uint32_t durationSeconds);
 
     /**
      * @brief Set the speed measurement value in the packet.
      * @param speedMetresPerSecond Speed in metres per second or km/h.
      */
-    void addSpeed(float speedMetresPerSecond);
+    bool addSpeed(float speedMetresPerSecond);
 
     /**
      * @brief Set the ultraviolet (UV) index value in the packet.
      * @param uvIndex UV index (unitless).
      */
-    void addUV(float uvIndex);
+    bool addUV(float uvIndex);
 
     /**
      * @brief Set a pulse count or heart rate value in the packet.
      * @param pulseBPM Pulse count or heart rate in beats per minute.
      */
-    void addPulse(uint32_t pulseBPM);
+    bool addPulse(uint32_t pulseBPM);
 
     /**
      * @brief Set a generic floating-point value in the packet.
      * @param valueFloat Arbitrary float value.
      */
-    void addGenericFloat(float valueFloat);
+    bool addGenericFloat(float valueFloat);
 
     /**
      * @brief Set a generic unsigned integer value in the packet.
      * @param valueUint Arbitrary unsigned integer value.
      */
-    void addGenericUint(uint32_t valueUint);
+    bool addGenericUint(uint32_t valueUint);
 
     /**
      * @brief Set a generic signed integer value in the packet.
      * @param valueInt Arbitrary signed integer value.
      */
-    void addGenericInt(int32_t valueInt);
+    bool addGenericInt(int32_t valueInt);
 
 private:
-    void addData(uint8_t index, float value);
-    void addData(uint8_t index, uint8_t value);
-    void addData(uint8_t index, uint16_t value);
-    void addData(uint8_t index, uint32_t value);
-    void addData(uint8_t index, int32_t value);
+    bool addFloat(uint8_t dataTypeId, float value);
+    bool addUInt8(uint8_t dataTypeId, uint8_t value);
+    bool addUInt16(uint8_t dataTypeId, uint16_t value);
+    bool addUInt32(uint8_t dataTypeId, uint32_t value);
+    bool AddInt32(uint8_t dataTypeId, int32_t value);
+    bool addMeasurement(uint8_t dataTypeId, const uint8_t *data, size_t len);
+    bool addLocalName(const char *name, bool isShortName);
+
+    uint8_t _measurementData[MAX_PAYLOAD_SIZE];
+    size_t _measurementDataLength = 0;
+    size_t _lengthByte;
 };
 
 #endif // BT_HOME_H
