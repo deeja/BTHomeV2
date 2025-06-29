@@ -47,26 +47,6 @@ inline void serializeU32(std::vector<uint8_t> &out, BtHomeValue val)
     }
 }
 
-inline void serializeU8(std::vector<uint8_t> &out, BtHomeValue val)
-{
-    out.push_back(static_cast<uint8_t>(val.u8));
-}
-
-inline void serializeU16(std::vector<uint8_t> &out, BtHomeValue val)
-{
-    uint16_t v = static_cast<uint16_t>(val.u16);
-    out.push_back(lowByte(v));
-    out.push_back(highByte(v));
-}
-
-inline void serializeU32(std::vector<uint8_t> &out, BtHomeValue val)
-{
-    uint32_t v = static_cast<uint32_t>(val.u32);
-    for (int i = 0; i < 4; ++i)
-    {
-        out.push_back((v >> (8 * i)) & 0xFF);
-    }
-}
 
 inline void serializeF32(std::vector<uint8_t> &out, BtHomeValue val)
 {
@@ -85,10 +65,20 @@ inline void serializeF32(std::vector<uint8_t> &out, BtHomeValue val)
 // Helper for 24-bit unsigned serialization
 inline void serializeU24(std::vector<uint8_t> &out, BtHomeValue val)
 {
-    uint32_t v = static_cast<uint32_t>(val.u32);
+    uint32_t v = val.u32;
     out.push_back((v >> 0) & 0xFF);
     out.push_back((v >> 8) & 0xFF);
     out.push_back((v >> 16) & 0xFF);
+}
+
+inline void serializeU48(std::vector<uint8_t> &out, BtHomeValue val)
+{
+    uint64_t v = val.u64;
+    out.push_back((v >> 0) & 0xFF);
+    out.push_back((v >> 8) & 0xFF);
+    out.push_back((v >> 16) & 0xFF);
+    out.push_back((v >> 24) & 0xFF);
+    out.push_back((v >> 32) & 0xFF);
 }
 
 // Helper for 8/16/24/32-bit signed serialization
@@ -119,13 +109,6 @@ inline void serializeTime(std::vector<uint8_t> &out, BtHomeValue val)
     serializeU48(out, v);
 }
 
-inline void serializeU48(std::vector<uint8_t> &out, BtHomeValue val)
-{
-    for (int i = 0; i < 6; ++i)
-    {
-        out.push_back((val.u64 >> (8 * i)) & 0xFF);
-    }
-}
 
 const BtHomeType temperature_sint8 = {0x57, 1.0f, serializeS8};
 const BtHomeType temperature_sint8_scale_0_35 = {0x58, 0.35f, serializeS8};

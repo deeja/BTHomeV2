@@ -36,18 +36,12 @@ size_t BtHome::getAdvertisementPayload(uint8_t *advertisementData)
   
     // copying the measurement data across to the outgoing advertisement data
     advertisementData[advertisementDataLength++] = _measurementDataLength; // Length of the payload from this point onwards
-    memcpy(advertisementData, _measurementData, advertisementDataLength);
+    memcpy(advertisementData, _measurementData, _measurementDataLength);
+    advertisementDataLength += _measurementDataLength;
+
+    return advertisementDataLength;
 }
 
-BtHome::BtHome()
-{
-
-    _measurementData[_measurementDataLength++] = 0x16; //  Service Data
-    // Service UUID
-    memcpy(_measurementData, btHomeServiceUuid, sizeof(btHomeServiceUuid));
-    _measurementDataLength += sizeof(btHomeServiceUuid);
-    _measurementData[_measurementDataLength++] = buildDeviceInfoByte(false, false, 2);    
-}
 /***
  * BTHome Device Information (0x40)
 https://bthome.io/format/
@@ -69,6 +63,17 @@ uint8_t buildDeviceInfoByte(bool encrypted, bool triggerBased, uint8_t version)
            (triggerBased ? 0b00000100 : 0) | // bit 2
            (version << 5);                   // bits 5–7
 }
+
+BtHome::BtHome()
+{
+
+    _measurementData[_measurementDataLength++] = 0x16; //  Service Data
+    // Service UUID
+    memcpy(_measurementData, btHomeServiceUuid, sizeof(btHomeServiceUuid));
+    _measurementDataLength += sizeof(btHomeServiceUuid);
+    _measurementData[_measurementDataLength++] = buildDeviceInfoByte(false, false, 2);    
+}
+
 
 bool BtHome::addDistanceMetres(float metres)
 {
