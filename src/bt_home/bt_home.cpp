@@ -18,7 +18,18 @@ Flags data: 020106
 
 const uint8_t btHomeFlags[] = {0x02, 0x01, 0x06};
 
+void BtHome::addDistanceMetres(float metres)
+{
+    uint16_t value = static_cast<uint16_t>(metres / distance_metre.scale); // Assuming 0.01m resolution
+    // Serialize and add value as needed
+}
 
+
+void BtHome::addDistanceMillimetres(float millimetres)
+{
+    uint16_t value = static_cast<uint16_t>(millimetres / distance_millimetre.scale); // Assuming 0.01m resolution
+    // Serialize and add value as needed
+}
 
 void BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution)
 {
@@ -102,3 +113,8 @@ void BtHome::addVoltage(float voltage, VoltageRangeResolution rangeResolution)
         break;
     }
 }
+
+ void BtHome::addBatteryPercentage(uint8_t batteryPercentage){
+    batteryPercentage / battery_percentage.scale;
+    
+ }

@@ -142,10 +142,15 @@ const BtHomeType count_sint32 = {0x5B, 1.0f, serializeS32};
 const BtHomeType voltage_0_001 = {0x0C, 0.001f, serializeU16};
 const BtHomeType voltage_0_1 = {0x4A, 0.1f, serializeU16};
 
+const BtHomeType battery_percentage = {0x01, 1.0f, serializeU8};
+
+const BtHomeType distance_millimetre = {0x40, 1.0f, serializeU16};
+const BtHomeType distance_metre = {0x41, 0.1f, serializeU16};
+
+
 
 
 const BtHomeType acceleration = {0x51, 0.001f, serializeU16};
-const BtHomeType battery = {0x01, 1.0f, serializeU8};
 const BtHomeType channel = {0x60, 1.0f, serializeU8};
 const BtHomeType co2 = {0x12, 1.0f, serializeU16};
 const BtHomeType conductivity = {0x56, 1.0f, serializeU16};
@@ -154,8 +159,6 @@ const BtHomeType current_uint16 = {0x43, 0.001f, serializeU16};
 const BtHomeType current_sint16 = {0x5D, 0.001f, serializeS16};
 const BtHomeType dewpoint = {0x08, 0.01f, serializeS16};
 const BtHomeType direction = {0x5E, 0.01f, serializeU16};
-const BtHomeType distance_millimetre = {0x40, 1.0f, serializeU16};
-const BtHomeType distance_metre = {0x41, 0.1f, serializeU16};
 const BtHomeType duration_uint24 = {0x42, 0.001f, serializeU24};
 const BtHomeType energy_uint32 = {0x4D, 0.001f, serializeU32};
 const BtHomeType energy_uint24 = {0x0A, 0.001f, serializeU24};

@@ -31,6 +31,24 @@ public:
     void addCount(int32_t count);
 
     /**
+     * @brief Set the distance measurement value in the packet.
+     * @param distanceMetres Distance in metres.
+     */
+    void addDistanceMetres(float distanceMetres);
+
+    /**
+     * @brief Set the distance measurement value in the packet.
+     * @param distanceMillimetres Distance in metres.
+     */
+    void addDistanceMillimetres(float distanceMillimetres);
+
+    /**
+     * @brief Set the battery level value in the packet.
+     * @param batteryPercentOrMillivolts Battery level as an unsigned 8-bit value (e.g., percentage or mV depending on implementation).
+     */
+    void addBatteryPercentage(uint8_t batteryPercentage);
+
+    /**
      * @brief Set the local Bluetooth device name.
      * @param name The local name.
      */
@@ -54,12 +72,6 @@ public:
      * @param illuminanceLux Ambient light in lux.
      */
     void addIlluminance(float illuminanceLux);
-
-    /**
-     * @brief Set the battery level value in the packet.
-     * @param batteryPercentOrMillivolts Battery level as an unsigned 8-bit value (e.g., percentage or mV depending on implementation).
-     */
-    void addBattery(uint8_t batteryPercentOrMillivolts);
 
     /**
      * @brief Set the button state in the packet.
@@ -146,18 +158,6 @@ public:
     void addDuration(uint32_t durationSeconds);
 
     /**
-     * @brief Set the distance measurement value in the packet.
-     * @param distanceMetres Distance in metres.
-     */
-    void addDistanceMetres(float distanceMetres);
-
-    /**
-     * @brief Set the distance measurement value in the packet.
-     * @param distanceMillimetres Distance in metres.
-     */
-    void addDistanceMillimetres(float distanceMillimetres);
-
-    /**
      * @brief Set the speed measurement value in the packet.
      * @param speedMetresPerSecond Speed in metres per second or km/h.
      */
@@ -203,7 +203,6 @@ private:
 
 #endif // BT_HOME_H
 
-
 /// @brief Temperature range resolution options for BTHome temperature data
 enum TemperatureRangeResolution
 {
@@ -216,7 +215,6 @@ enum TemperatureRangeResolution
     /// @brief Temperature range -3276.8 to 3276.7 degrees Celsius, resolution 0.01 degrees Celsius - 2 bytes
     RANGE_327_RESOLUTION_0_01
 };
-
 
 /// @brief Voltage range resolution options for BTHome Voltage data
 enum VoltageRangeResolution
