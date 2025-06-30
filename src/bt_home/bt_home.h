@@ -38,9 +38,9 @@ enum VoltageRangeResolution
 class BtHome
 {
 public:
-    BtHome();
+    BtHome(const char* deviceName, bool isTriggerDevice);
 
-    size_t getBytes(uint8_t *payload);
+    std::string  getBytes();
     void clearMeasurementData();
 
     /**

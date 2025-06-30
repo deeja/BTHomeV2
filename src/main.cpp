@@ -1,27 +1,48 @@
 #include <Arduino.h>
 #include "bt_home/bt_home.h"
 
+
+// Overload for std::string (treat as raw bytes)
+void printBytes(const std::string& bytes) {
+  String hexString;
+  for (size_t i = 0; i < bytes.size(); ++i) {
+    uint8_t b = static_cast<uint8_t>(bytes[i]);
+    if (b < 16) hexString += "0";
+    hexString += String(b, HEX);
+    if (i < bytes.size() - 1) hexString += " ";
+  }
+  Serial.println("Bytes (hex): " + hexString);
+  Serial.println("Bytes (string): " + String(bytes.c_str()));
+}
+
 void setup()
 {
-  Serial.begin(115200); // Initialize Serial Monitor for debugging
-  delay(50);            // Wait for Serial Monitor to open
-  ESP_LOGI("main", "Starting BT Home Example...");
-  // put your setup code here, to run once:
-  BtHome btHome1;
+  Serial.begin(115200);
+  delay(50); // Let serial settle
 
-  ESP_LOGI("main", "Client name: %s", "aaaa");
+  Serial.println("Starting BT Home Example...");
+  
+  // Create BtHome object
+  BtHome btHome1("aaaa", false);
+  printBytes(btHome1.getBytes());
+
+  Serial.print("Client name: ");
+  Serial.println("aaaa");
+
   btHome1.addTemperature(25.0f, RANGE_127_RESOLUTION_1);
-  btHome1.getBytes();
+  printBytes(btHome1.getBytes());
 
-  ESP_LOGI("main", "Adding distance measurement: %f", 1.0f);
+  Serial.print("Adding distance measurement: ");
+  Serial.println(1.0f);
+
   btHome1.addDistanceMetres(1.0f);
-  btHome1.getBytes();
+  printBytes(btHome1.getBytes());
 
-  btHome1.addDistanceMillimetres(distance_millimetre.id, 1.0f);
-  btHome1.getBytes();
+  btHome1.addDistanceMillimetres(1.0f);
+  printBytes(btHome1.getBytes());
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  // Do nothing
 }

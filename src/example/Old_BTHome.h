@@ -4,8 +4,7 @@
 
 class Old_BTHome {
   public:
-    void begin(String dname = "DIY-sensor",  bool trigger_based_device = false);
-    void setDeviceName(String dname = "");
+    Old_BTHome(String device_name = "DIY-sensor",  bool trigger_based_device = false);
     std::string buildPacket();
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
@@ -14,8 +13,8 @@ class Old_BTHome {
     bool addBytes(BtHomeType sensor, uint8_t *value, uint8_t size);
 
   private:
-    uint8_t m_sensorDataIdx;
-    byte m_sensorData[MEASUREMENT_MAX_LEN] = {0};
-    String dev_name;
-    bool m_triggerdevice;
+    uint8_t _sensorDataIdx = 0;
+    byte _sensorData[MEASUREMENT_MAX_LEN] = {0};
+    String _device_name;
+    bool _triggerdevice;
 };
