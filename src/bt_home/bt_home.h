@@ -4,6 +4,7 @@
 // https://bthome.io/format/
 
 #include <Arduino.h>
+#include <example/Old_BTHome.h>
 
 /**
  * @file BTHome.h
@@ -39,7 +40,7 @@ class BtHome
 public:
     BtHome();
 
-    size_t getAdvertisementPayload(uint8_t *payload);
+    size_t getBytes(uint8_t *payload);
     void clearMeasurementData();
 
     /**
@@ -225,6 +226,7 @@ private:
     bool addMeasurement(uint8_t dataTypeId, const uint8_t *data, size_t len);
     bool addLocalName(const char *name, bool isShortName);
 
+    Old_BTHome _oldbthome;
     uint8_t _measurementData[MAX_PAYLOAD_SIZE];
     size_t _measurementDataLength = 0;
     size_t _lengthByte;
