@@ -25,7 +25,7 @@ bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 {
   if ((this->_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= (MEASUREMENT_MAX_LEN - (0)))
   {
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(sensor.id & 0xff);
+    this->_sensorData[this->_sensorDataIdx] = sensor.id;
     this->_sensorDataIdx++;
     this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(state & 0xff);
     this->_sensorDataIdx++;
@@ -52,7 +52,7 @@ bool Old_BTHome::addInteger(BtHomeType sensor, uint64_t value)
   uint16_t factor = sensor.scale;
   if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(sensor.id & 0xff);
+    this->_sensorData[this->_sensorDataIdx] = sensor.id;
     this->_sensorDataIdx++;
     for (uint8_t i = 0; i < size; i++)
     {
@@ -80,7 +80,7 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
   if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
     uint64_t value2 = static_cast<uint64_t>(value / factor);
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(sensor.id & 0xff);
+    this->_sensorData[this->_sensorDataIdx] = sensor.id;
     this->_sensorDataIdx++;
     for (uint8_t i = 0; i < size; i++)
     {
@@ -106,7 +106,7 @@ bool Old_BTHome::addBytes(BtHomeType sensor, uint8_t *value, uint8_t size)
   if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
     // Add sensor id
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(sensor.id & 0xff);
+    this->_sensorData[this->_sensorDataIdx] = sensor.id;
     this->_sensorDataIdx++;
     // Add data size, 1 byte
     this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(size & 0xff);

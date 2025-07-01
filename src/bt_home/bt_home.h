@@ -16,14 +16,14 @@ static const size_t MAX_PAYLOAD_SIZE = 31;
 /// @brief Temperature range resolution options for BTHome temperature data
 enum TemperatureRangeResolution
 {
-    /// @brief Temperature range -22 to 57 degrees Celsius, resolution 1 degree Celsius - 1 byte
+    /// @brief Temperature range -127 to 127  degrees Celsius, resolution 1 degree Celsius - 1 byte
     RANGE_127_RESOLUTION_1,
-    /// @brief Temperature range -7.7 to 57 degrees Celsius, resolution 0.35 degrees Celsius - 1 byte
+    /// @brief Temperature range -57 to 57 degrees Celsius, resolution 0.35 degrees Celsius - 1 byte
     RANGE_44_RESOLUTION_0_35,
     /// @brief Temperature range -327.68 to 327.67 degrees Celsius, resolution 0.1 degrees Celsius - 2 bytes
-    RANGE_3276_RESOLUTION_0_1,
+    RANGE_327_RESOLUTION_0_01,
     /// @brief Temperature range -3276.8 to 3276.7 degrees Celsius, resolution 0.01 degrees Celsius - 2 bytes
-    RANGE_327_RESOLUTION_0_01
+    RANGE_3276_RESOLUTION_0_1
 };
 
 /// @brief Voltage range resolution options for BTHome Voltage data

@@ -9,7 +9,7 @@ void BtHome::clearMeasurementData()
 /// @brief Builds an outgoing wrapper for the current measurement data.
 /// @param payload
 /// @return
-std::string  BtHome::getBytes()
+std::string BtHome::getBytes()
 {
     return _oldbthome.buildPacket(); // TODO: get the data
 }
@@ -25,7 +25,7 @@ bool BtHome::addDistanceMetres(float metres)
 
 bool BtHome::addDistanceMillimetres(float millimetres)
 {
-    return _oldbthome.addFloat(distance_millimetre, millimetres);    
+    return _oldbthome.addFloat(distance_millimetre, millimetres);
 }
 
 bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution)
@@ -33,13 +33,13 @@ bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution ran
 
     switch (rangeResolution)
     {
-    case RANGE_127_RESOLUTION_1:
-    {
-        return _oldbthome.addFloat(temperature_int8, degreesCelsius);
-    }
     case RANGE_44_RESOLUTION_0_35:
     {
         return _oldbthome.addFloat(temperature_int8_scale_0_35, degreesCelsius);
+    }
+    case RANGE_127_RESOLUTION_1:
+    {
+        return _oldbthome.addFloat(temperature_int8, degreesCelsius);
     }
     case RANGE_3276_RESOLUTION_0_1:
     {

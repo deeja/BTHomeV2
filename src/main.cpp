@@ -4,15 +4,7 @@
 
 // Overload for std::string (treat as raw bytes)
 void printBytes(const std::string& bytes) {
-  String hexString;
-  for (size_t i = 0; i < bytes.size(); ++i) {
-    uint8_t b = static_cast<uint8_t>(bytes[i]);
-    if (b < 16) hexString += "0";
-    hexString += String(b, HEX);
-    if (i < bytes.size() - 1) hexString += " ";
-  }
-  Serial.println("Bytes (hex): " + hexString);
-  Serial.println("Bytes (string): " + String(bytes.c_str()));
+  Serial.println(String(bytes.c_str()));
 }
 
 void setup()
@@ -29,17 +21,18 @@ void setup()
   Serial.print("Client name: ");
   Serial.println("aaaa");
 
-  btHome1.addTemperature(25.0f, RANGE_127_RESOLUTION_1);
+  btHome1.addTemperature(1.0f, RANGE_127_RESOLUTION_1);
+  printBytes(btHome1.getBytes());
+  btHome1.addTemperature(1.0f, RANGE_44_RESOLUTION_0_35);
+  printBytes(btHome1.getBytes());
+  btHome1.addTemperature(1.0f, RANGE_327_RESOLUTION_0_01);
+  printBytes(btHome1.getBytes());
+  btHome1.addTemperature(1.0f, RANGE_3276_RESOLUTION_0_1);
   printBytes(btHome1.getBytes());
 
-  Serial.print("Adding distance measurement: ");
-  Serial.println(1.0f);
 
-  btHome1.addDistanceMetres(1.0f);
-  printBytes(btHome1.getBytes());
 
-  btHome1.addDistanceMillimetres(1.0f);
-  printBytes(btHome1.getBytes());
+
 }
 
 void loop()
