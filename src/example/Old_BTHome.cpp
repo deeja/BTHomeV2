@@ -137,8 +137,8 @@ std::string Old_BTHome::buildPacket()
     serviceData += _sensorData[i]; // Add the sensor data to the Service Data
   }
 
-  byte sd_length = serviceData.length(); // Generate the length of the Service Data
-  payloadData += sd_length;              // Add the length of the Service Data
+  uint8_t serviceDataLength = serviceData.length(); // Generate the length of the Service Data
+  payloadData += serviceDataLength;              // Add the length of the Service Data
   payloadData += serviceData;            // Finalize the packet
 
   // Output payloadData as hex
