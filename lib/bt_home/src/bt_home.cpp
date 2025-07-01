@@ -52,27 +52,27 @@ bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution ran
     return false;
 }
 
-bool BtHome::addCount(uint32_t count)
+bool BtHome::addCount_0_4294967295(uint32_t count)
 {
     return _oldbthome.addInteger(count_uint32, count);
 }
-bool BtHome::addCount(uint8_t count)
+bool BtHome::addCount_0_255(uint8_t count)
 {
     return _oldbthome.addInteger(count_uint8, count);
 }
-bool BtHome::addCount(uint16_t count)
+bool BtHome::addCount_0_65535(uint16_t count)
 {
     return _oldbthome.addInteger(count_uint16, count);
 }
-bool BtHome::addCount(int8_t count)
+bool BtHome::addCount_neg128_127(int8_t count)
 {
     return _oldbthome.addInteger(count_int8, count);
 }
-bool BtHome::addCount(int16_t count)
+bool BtHome::addCount_neg32768_32767(int16_t count)
 {
     return _oldbthome.addInteger(count_int16, count);
 }
-bool BtHome::addCount(int32_t count)
+bool BtHome::addCount_neg2147483648_2147483647(int32_t count)
 {
     return _oldbthome.addInteger(count_int32, count);
 }

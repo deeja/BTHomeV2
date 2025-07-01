@@ -138,6 +138,8 @@ std::string Old_BTHome::buildPacket()
   }
 
   uint8_t serviceDataLength = serviceData.length(); // Generate the length of the Service Data
+  Serial.println("Service Data Length: " + String(serviceDataLength));
+  
   payloadData += serviceDataLength;              // Add the length of the Service Data
   payloadData += serviceData;            // Finalize the packet
 

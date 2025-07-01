@@ -53,12 +53,12 @@ public:
      * @brief Set a generic count value in the packet.
      * @param count Arbitrary count (e.g., event count).
      */
-    bool addCount(uint32_t count);
-    bool addCount(uint8_t count);
-    bool addCount(uint16_t count);
-    bool addCount(int8_t count);
-    bool addCount(int16_t count);
-    bool addCount(int32_t count);
+    bool addCount_0_4294967295(uint32_t count);
+    bool addCount_0_255(uint8_t count);
+    bool addCount_0_65535(uint16_t count);
+    bool addCount_neg128_127(int8_t count);
+    bool addCount_neg32768_32767(int16_t count);
+    bool addCount_neg2147483648_2147483647(int32_t count);
 
     /**
      * @brief Set the distance measurement value in the packet.
