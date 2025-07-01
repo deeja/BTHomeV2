@@ -59,10 +59,9 @@ void test_addDistance()
     std::string result = btHome.getBytes();
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
     btHome.addDistanceMetres(7.8);
-
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40414E00", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060716D2FC40414E00", btHome.getBytes().c_str());
     btHome.addDistanceMillimetres(12);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40414E00400C00", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060A16D2FC40414E00400C00", btHome.getBytes().c_str());
 }
 
 void test_addCount()
@@ -82,6 +81,7 @@ void test_addCount()
 
     btHome.addCount_neg128_127(-22);
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C096059EA", result.c_str());
+
 
     btHome.addCount_neg32768_32767(-5398);
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C096059EA5AEAEA", result.c_str());
