@@ -1,5 +1,4 @@
 #include "bt_home.h"
-#include "data_types.h"
 
 void BtHome::clearMeasurementData()
 {

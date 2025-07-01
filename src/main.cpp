@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "bt_home/bt_home.h"
+#include <bt_home.h>
 
 
 // Overload for std::string (treat as raw bytes)
@@ -21,14 +21,6 @@ void setup()
   Serial.print("Client name: ");
   Serial.println("aaaa");
 
-  btHome1.addTemperature(-22.0f, RANGE_127_RESOLUTION_1);
-  printBytes(btHome1.getBytes());
-  btHome1.addTemperature(-7.7f, RANGE_44_RESOLUTION_0_35);
-  printBytes(btHome1.getBytes());
-  btHome1.addTemperature(25.06f, RANGE_327_RESOLUTION_0_01);
-  printBytes(btHome1.getBytes());
-  btHome1.addTemperature(27.3f, RANGE_3276_RESOLUTION_0_1);
-  printBytes(btHome1.getBytes());
 
 
 

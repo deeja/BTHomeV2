@@ -1,6 +1,6 @@
 #include "definitions.h"
 #include <Arduino.h>
-#include <bt_home/data_types.h>
+#include <data_types.h>
 
 class Old_BTHome {
   public:
