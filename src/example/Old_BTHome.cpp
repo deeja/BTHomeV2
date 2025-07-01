@@ -2,12 +2,12 @@
 #include "Old_BTHome.h"
 
 /// @brief Initialize the Old_BTHome object.
-/// @param device_name 
-/// @param trigger_based_device 
-Old_BTHome::Old_BTHome(String device_name, bool trigger_based_device) :  _device_name(device_name), _triggerdevice(trigger_based_device)
+/// @param device_name
+/// @param trigger_based_device
+Old_BTHome::Old_BTHome(String device_name, bool trigger_based_device) : _device_name(device_name), _triggerdevice(trigger_based_device)
 {
   _sensorDataIdx = 0; // Initialize the sensor data index
-  memset(_sensorData, 0, sizeof(_sensorData)); 
+  memset(_sensorData, 0, sizeof(_sensorData));
 }
 
 /// @brief Clear the measurement data.
@@ -17,10 +17,10 @@ void Old_BTHome::resetMeasurement()
 }
 
 /// @brief Add a state or step value to the sensor data packet.
-/// @param sensor 
-/// @param state 
-/// @param steps 
-/// @return 
+/// @param sensor
+/// @param state
+/// @param steps
+/// @return
 bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 {
   if ((_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= (MEASUREMENT_MAX_LEN - (0)))
@@ -43,84 +43,68 @@ bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 }
 
 /// @brief Integer data
-/// @param sensor 
-/// @param value 
-/// @return 
+/// @param sensor
+/// @param value
+/// @return
 bool Old_BTHome::addInteger(BtHomeType sensor, uint64_t value)
 {
   uint8_t size = sensor.bytecount;
-  uint16_t factor = sensor.scale;
-  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
   {
-    _sensorData[_sensorDataIdx] = sensor.id;
-    _sensorDataIdx++;
-    for (uint8_t i = 0; i < size; i++)
-    {
-      _sensorData[_sensorDataIdx] = static_cast<byte>(((value / factor) >> (8 * i)) & 0xff);
-      _sensorDataIdx++;
-    }
+    return false;
   }
-  else
-  {
-    return addInteger(sensor, value);
-  }
-  return true;
+
+  uint64_t scaledValue = value / sensor.scale;;  
+  return pushBytes(scaledValue, sensor);
 }
 
-
 /// @brief Float data
-/// @param sensor 
-/// @param value 
-/// @return 
+/// @param sensor
+/// @param value
+/// @return
 bool Old_BTHome::addFloat(BtHomeType sensor, float value)
 {
-  uint8_t size = sensor.bytecount;
-  uint16_t factor = sensor.scale;
-
-  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + sensor.bytecount + 1) > (MEASUREMENT_MAX_LEN))
   {
-    uint64_t value2 = static_cast<uint64_t>(value / factor);
-    _sensorData[_sensorDataIdx] = sensor.id;
+    return false; // Not enough space for the data
+  }
+
+  float factor = sensor.scale;
+  float scaledValue = value / factor;  
+  return pushBytes(static_cast<uint64_t>(scaledValue), sensor);
+}
+
+bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor){
+  _sensorData[_sensorDataIdx] = sensor.id;
+  _sensorDataIdx++;
+  for (uint8_t i = 0; i < sensor.bytecount; i++)
+  {
+    _sensorData[_sensorDataIdx] = static_cast<byte>((value2 >> (8 * i)) & 0xff);
     _sensorDataIdx++;
-    for (uint8_t i = 0; i < size; i++)
-    {
-      _sensorData[_sensorDataIdx] = static_cast<byte>((value2 >> (8 * i)) & 0xff);
-      _sensorDataIdx++;
-    }
   }
-  else
-  {
-    return addFloat(sensor, value);
-  }
-
   return true;
 }
 
 /// @brief TEXT and RAW data
-/// @param sensor 
-/// @param value 
-/// @param size 
-/// @return 
-bool Old_BTHome::addBytes(BtHomeType sensor, uint8_t *value, uint8_t size)
+/// @param sensor
+/// @param value
+/// @param size
+/// @return
+bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
 {
-  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
   {
-    // Add sensor id
-    _sensorData[_sensorDataIdx] = sensor.id;
-    _sensorDataIdx++;
-    // Add data size, 1 byte
-    _sensorData[_sensorDataIdx] = static_cast<byte>(size & 0xff);
-    _sensorDataIdx++;
-    // Add data bytes
-    for (uint8_t i = 0; i < size; i++)
-    {
-      _sensorData[_sensorDataIdx] = static_cast<byte>(value[i] & 0xff);
-      _sensorDataIdx++;
-    }
+    return false;
   }
-  else
+
+  _sensorData[_sensorDataIdx] = sensor.id;
+  _sensorDataIdx++;
+  _sensorData[_sensorDataIdx] = static_cast<byte>(size & 0xff);
+  _sensorDataIdx++;
+  for (uint8_t i = 0; i < size; i++)
   {
-    return addBytes(sensor, value, size);
+    _sensorData[_sensorDataIdx] = static_cast<byte>(value[i] & 0xff);
+    _sensorDataIdx++;
   }
   return true;
 }

@@ -5,7 +5,6 @@
 #include <Arduino.h>
 #include <vector>
 
-
 struct BtHomeType
 {
     uint8_t id;  // Type ID
@@ -13,7 +12,6 @@ struct BtHomeType
     uint8_t bytecount;
     bool signed_value; // true if value is signed, false if unsigned
 };
-
 
 const BtHomeType temperature_int8 = {0x57, 1.0f, 1, true};
 const BtHomeType temperature_int8_scale_0_35 = {0x58, 0.35f, 1, true};
@@ -34,9 +32,6 @@ const BtHomeType battery_percentage = {0x01, 1.0f, 1, false};
 
 const BtHomeType distance_millimetre = {0x40, 1.0f, 2, false};
 const BtHomeType distance_metre = {0x41, 0.1f, 2, false};
-
-
-
 
 const BtHomeType acceleration = {0x51, 0.001f, 2, false};
 const BtHomeType channel = {0x60, 1.0f, 1, false};
@@ -63,7 +58,8 @@ const BtHomeType moisture_uint8 = {0x2F, 1.0f, 1, false};
 const BtHomeType pm2_5 = {0x0D, 1.0f, 2, false};
 const BtHomeType pm10 = {0x0E, 1.0f, 2, false};
 const BtHomeType power_uint24 = {0x0B, 0.01f, 3, false};
-const BtHomeType power_int32 = {0x5C, 0.01f, 4, true};;
+const BtHomeType power_int32 = {0x5C, 0.01f, 4, true};
+;
 const BtHomeType precipitation = {0x5F, 0.1f, 2, false};
 const BtHomeType pressure = {0x04, 0.01f, 3, false};
 const BtHomeType rotation = {0x3F, 0.1f, 2, true};
