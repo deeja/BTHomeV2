@@ -6,14 +6,14 @@
 /// @param trigger_based_device 
 Old_BTHome::Old_BTHome(String device_name, bool trigger_based_device) :  _device_name(device_name), _triggerdevice(trigger_based_device)
 {
-  this->_sensorDataIdx = 0; // Initialize the sensor data index
-  memset(this->_sensorData, 0, sizeof(this->_sensorData)); 
+  _sensorDataIdx = 0; // Initialize the sensor data index
+  memset(_sensorData, 0, sizeof(_sensorData)); 
 }
 
 /// @brief Clear the measurement data.
 void Old_BTHome::resetMeasurement()
 {
-  this->_sensorDataIdx = 0;
+  _sensorDataIdx = 0;
 }
 
 /// @brief Add a state or step value to the sensor data packet.
@@ -23,16 +23,16 @@ void Old_BTHome::resetMeasurement()
 /// @return 
 bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 {
-  if ((this->_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= (MEASUREMENT_MAX_LEN - (0)))
   {
-    this->_sensorData[this->_sensorDataIdx] = sensor.id;
-    this->_sensorDataIdx++;
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(state & 0xff);
-    this->_sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = sensor.id;
+    _sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = static_cast<byte>(state & 0xff);
+    _sensorDataIdx++;
     if (steps > 0)
     {
-      this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(steps & 0xff);
-      this->_sensorDataIdx++;
+      _sensorData[_sensorDataIdx] = static_cast<byte>(steps & 0xff);
+      _sensorDataIdx++;
     }
   }
   else
@@ -50,14 +50,14 @@ bool Old_BTHome::addInteger(BtHomeType sensor, uint64_t value)
 {
   uint8_t size = sensor.bytecount;
   uint16_t factor = sensor.scale;
-  if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
-    this->_sensorData[this->_sensorDataIdx] = sensor.id;
-    this->_sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = sensor.id;
+    _sensorDataIdx++;
     for (uint8_t i = 0; i < size; i++)
     {
-      this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(((value / factor) >> (8 * i)) & 0xff);
-      this->_sensorDataIdx++;
+      _sensorData[_sensorDataIdx] = static_cast<byte>(((value / factor) >> (8 * i)) & 0xff);
+      _sensorDataIdx++;
     }
   }
   else
@@ -77,15 +77,15 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
   uint8_t size = sensor.bytecount;
   uint16_t factor = sensor.scale;
 
-  if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
     uint64_t value2 = static_cast<uint64_t>(value / factor);
-    this->_sensorData[this->_sensorDataIdx] = sensor.id;
-    this->_sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = sensor.id;
+    _sensorDataIdx++;
     for (uint8_t i = 0; i < size; i++)
     {
-      this->_sensorData[this->_sensorDataIdx] = static_cast<byte>((value2 >> (8 * i)) & 0xff);
-      this->_sensorDataIdx++;
+      _sensorData[_sensorDataIdx] = static_cast<byte>((value2 >> (8 * i)) & 0xff);
+      _sensorDataIdx++;
     }
   }
   else
@@ -103,19 +103,19 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
 /// @return 
 bool Old_BTHome::addBytes(BtHomeType sensor, uint8_t *value, uint8_t size)
 {
-  if ((this->_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + size + 1) <= (MEASUREMENT_MAX_LEN - (0)))
   {
     // Add sensor id
-    this->_sensorData[this->_sensorDataIdx] = sensor.id;
-    this->_sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = sensor.id;
+    _sensorDataIdx++;
     // Add data size, 1 byte
-    this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(size & 0xff);
-    this->_sensorDataIdx++;
+    _sensorData[_sensorDataIdx] = static_cast<byte>(size & 0xff);
+    _sensorDataIdx++;
     // Add data bytes
     for (uint8_t i = 0; i < size; i++)
     {
-      this->_sensorData[this->_sensorDataIdx] = static_cast<byte>(value[i] & 0xff);
-      this->_sensorDataIdx++;
+      _sensorData[_sensorDataIdx] = static_cast<byte>(value[i] & 0xff);
+      _sensorDataIdx++;
     }
   }
   else
@@ -143,14 +143,14 @@ std::string Old_BTHome::buildPacket()
   serviceData += UUID2;        // DO NOT CHANGE -- UUID
                                // The encryption
 
-  if (this->_triggerdevice)
+  if (_triggerdevice)
     serviceData += NO_ENCRYPT_TRIGGER_BASE;
   else
     serviceData += NO_ENCRYPT;
 
-  for (i = 0; i < this->_sensorDataIdx; i++)
+  for (i = 0; i < _sensorDataIdx; i++)
   {
-    serviceData += this->_sensorData[i]; // Add the sensor data to the Service Data
+    serviceData += _sensorData[i]; // Add the sensor data to the Service Data
   }
 
   byte sd_length = serviceData.length(); // Generate the length of the Service Data
