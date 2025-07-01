@@ -19,6 +19,11 @@ void test_packetLength()
     // 0x16 = Service Data - 16-bit UUID
     // 0xD2FC4002C40903BF13 = BTHome data (see below)
 
+    // 020106 = Flags data
+    // 04 = Length of the service data (4 bytes)
+    // 16 = Service Data - 16-bit UUID
+    // D2FC40 = BTHome UUID
+
     Serial.println("Testing BtHome packet length...");
     BtHome btHome("CountTest", false);
     // 4 bytes
