@@ -11,6 +11,17 @@ void tearDown()
     // clean stuff up here
 }
 
+void test_fullLocalName()
+{
+    Serial.println("Testing BtHome full local name...");
+    BtHome btHome("DIY-sensor","DIY-sensor", false);
+    TEST_ASSERT_EQUAL_STRING("0201060B094449592D73656E736F720416D2FC40", btHome.getBytes().c_str());
+
+    BtHome btHome2("test","DIY-sensor", false);
+    TEST_ASSERT_EQUAL_STRING("0201060B094449592D73656E736F720416D2FC40", btHome2.getBytes().c_str());
+
+} 
+
 void test_packetLength()
 {
     // Service data (16-bit UUID): 0A 16 D2FC4002C40903BF13 (BTHome data)
@@ -25,73 +36,73 @@ void test_packetLength()
     // D2FC40 = BTHome UUID
 
     Serial.println("Testing BtHome packet length...");
-    BtHome btHome("TestDevice","TestDevice", false);
+    BtHome btHome("sss","llll", false);
     // 4 bytes
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
     // 6 bytes
-    TEST_ASSERT_EQUAL_STRING("0201060616D2FC400901", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC400901", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
     // 8 bytes
-    TEST_ASSERT_EQUAL_STRING("0201060816D2FC4009010901", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0816D2FC4009010901", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
 }
 
 void test_addTemperature()
 {
     Serial.println("Testing BtHome getBytes method...");
-    BtHome btHome("TestDevice","TestDevice", false);
+    BtHome btHome("sss","llll", false);
     std::string result = btHome.getBytes();
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", result.c_str());
     btHome.addTemperature(-22.0f, RANGE_127_RESOLUTION_1);
-    TEST_ASSERT_EQUAL_STRING("0201060616D2FC4057EA", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC4057EA", btHome.getBytes().c_str());
     btHome.addTemperature(-7.7f, RANGE_44_RESOLUTION_0_35);
-    TEST_ASSERT_EQUAL_STRING("0201060816D2FC4057EA58EA", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0816D2FC4057EA58EA", btHome.getBytes().c_str());
     btHome.addTemperature(25.06f, RANGE_327_RESOLUTION_0_01);
-    TEST_ASSERT_EQUAL_STRING("0201060B16D2FC4057EA58EA02CA09", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0B16D2FC4057EA58EA02CA09", btHome.getBytes().c_str());
     btHome.addTemperature(27.3f, RANGE_3276_RESOLUTION_0_1);
-    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4057EA58EA02CA09451101", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0E16D2FC4057EA58EA02CA09451101", btHome.getBytes().c_str());
 }
 
 void test_addDistance()
 {
-    BtHome btHome("TestDevice","TestDevice", false);
+    BtHome btHome("sss","llll", false);
     std::string result = btHome.getBytes();
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", result.c_str());
     btHome.addDistanceMetres(7.8);
-    TEST_ASSERT_EQUAL_STRING("0201060716D2FC40414E00", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0716D2FC40414E00", btHome.getBytes().c_str());
     btHome.addDistanceMillimetres(12);
-    TEST_ASSERT_EQUAL_STRING("0201060A16D2FC40414E00400C00", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0A16D2FC40414E00400C00", btHome.getBytes().c_str());
 }
 
 void test_addCount_unsigned_integer()
 {
-    BtHome btHome("TestDevice","TestDevice", false);
+    BtHome btHome("sss","llll", false);
 
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", btHome.getBytes().c_str());
     bool success = btHome.addCount_0_255(96);
     TEST_ASSERT_TRUE(success);
-    TEST_ASSERT_EQUAL_STRING("0201060616D2FC400960", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC400960", btHome.getBytes().c_str());
 
     btHome.addCount_0_65535(24585);
-    TEST_ASSERT_EQUAL_STRING("0201060916D2FC4009603D0960", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC4009603D0960", btHome.getBytes().c_str());
 
      
     btHome.addCount_0_4294967295(1611213866);
-    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4009603D09603E2A2C0960", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0E16D2FC4009603D09603E2A2C0960", btHome.getBytes().c_str());
 }
 
 void test_addCount_signed_integer()
 {
-    BtHome btHome("TestDevice","TestDevice", false);
+    BtHome btHome("sss","llll", false);
     btHome.addCount_neg128_127(-22);
-    TEST_ASSERT_EQUAL_STRING("0201060616D2FC4059EA", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC4059EA", btHome.getBytes().c_str());
 
     btHome.addCount_neg32768_32767(-5398);
-    TEST_ASSERT_EQUAL_STRING("0201060916D2FC4059EA5AEAEA", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC4059EA5AEAEA", btHome.getBytes().c_str());
 
     btHome.addCount_neg2147483648_2147483647(-365690134);
-    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4059EA5AEAEA5BEA0234EA", btHome.getBytes().c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0E16D2FC4059EA5AEAEA5BEA0234EA", btHome.getBytes().c_str());
 }
 
 void setup()
@@ -106,11 +117,13 @@ void setup()
 void loop()
 {
     delay(500);
+    
+    RUN_TEST(test_fullLocalName);
     RUN_TEST(test_packetLength);
     RUN_TEST(test_addTemperature);
     RUN_TEST(test_addDistance);
-    RUN_TEST(test_addCount_signed_integer);
     RUN_TEST(test_addCount_unsigned_integer);
+    RUN_TEST(test_addCount_signed_integer);
 
     delay(500);
     UNITY_END(); // stop unit testing

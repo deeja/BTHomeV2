@@ -19,6 +19,7 @@ class Old_BTHome {
     byte _sensorData[MEASUREMENT_MAX_LEN] = {0};
     const char* _shortName;
     const char* _fullName;
+    bool hasEnoughSpace(BtHomeType sensor);
     template <typename T>
     bool addInteger(BtHomeType sensor, T value);
     bool _triggerdevice;

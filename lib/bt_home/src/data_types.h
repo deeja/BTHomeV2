@@ -9,7 +9,7 @@ struct BtHomeType
 {
     uint8_t id;  // Type ID
     float scale; // Multiplier to apply before serializing
-    uint8_t bytecount;
+    uint8_t byteCount;
     bool signed_value; // true if value is signed, false if unsigned
 };
 

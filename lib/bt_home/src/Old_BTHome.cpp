@@ -1,10 +1,10 @@
 #include "Arduino.h"
 #include "Old_BTHome.h"
 
-/// @brief 
+/// @brief
 /// @param shortName - Short name of the device - sent when space is limited. Max 12 characters.
 /// @param fullName - Full name of the device - sent when space is available.
-/// @param isTriggerBased 
+/// @param isTriggerBased
 Old_BTHome::Old_BTHome(const char *shortName, const char *fullName, bool isTriggerBased) : _shortName(shortName), _fullName(fullName), _triggerdevice(isTriggerBased)
 {
 }
@@ -14,6 +14,18 @@ void Old_BTHome::resetMeasurement()
 {
   _sensorDataIdx = 0;
 }
+
+/// @brief Check that there is enough space in the sensor data packet for the given size.
+/// @details The sensor data packet has a maximum length defined by MEASUREMENT_MAX_LEN.
+/// @param size
+/// @return Returns true if there is enough space for the given size, false otherwise.
+bool Old_BTHome::hasEnoughSpace(BtHomeType sensor)
+{
+  // minimum space is needed for the short name, but if there is spare room then we can use the full name
+  uint8_t shortNameSize = strlen(_shortName) + 2; // 1 byte for the name id and one for the size byte
+  return ((_sensorDataIdx + sensor.byteCount + 1) <= (MEASUREMENT_MAX_LEN - shortNameSize));
+}
+
 
 /// @brief Add a state or step value to the sensor data packet.
 /// @param sensor
@@ -54,8 +66,7 @@ bool Old_BTHome::addSignedInteger(BtHomeType sensor, int64_t value)
 template <typename T>
 bool Old_BTHome::addInteger(BtHomeType sensor, T value)
 {
-  uint8_t size = sensor.bytecount;
-  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
+  if (!hasEnoughSpace(sensor))
   {
     return false;
   }
@@ -69,7 +80,7 @@ bool Old_BTHome::addInteger(BtHomeType sensor, T value)
 /// @return
 bool Old_BTHome::addFloat(BtHomeType sensor, float value)
 {
-  if ((_sensorDataIdx + sensor.bytecount + 1) > (MEASUREMENT_MAX_LEN))
+  if (!hasEnoughSpace(sensor))
   {
     return false;
   }
@@ -83,7 +94,7 @@ bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
 {
   _sensorData[_sensorDataIdx] = sensor.id;
   _sensorDataIdx++;
-  for (uint8_t i = 0; i < sensor.bytecount; i++)
+  for (uint8_t i = 0; i < sensor.byteCount; i++)
   {
     _sensorData[_sensorDataIdx] = static_cast<byte>((value2 >> (8 * i)) & 0xff);
     _sensorDataIdx++;
@@ -98,7 +109,8 @@ bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
 /// @return
 bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
 {
-  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
+  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN - strlen(_shortName) - 2)) 
+  // TODO: see if this can be moved to the hasEnoughSpace function
   {
     return false;
   }
@@ -115,6 +127,8 @@ bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
   return true;
 }
 
+
+
 std::string Old_BTHome::buildPacket()
 {
 
@@ -127,6 +141,35 @@ std::string Old_BTHome::buildPacket()
   payloadData += FLAG1;
   payloadData += FLAG2;
   payloadData += FLAG3;
+
+
+  bool restricted = false;
+  if (restricted)
+  {
+    
+    payloadData += strlen(_shortName) + 1;
+    payloadData += SHORT_NAME;
+    payloadData += _shortName;    
+  }
+  else
+  {
+    
+    payloadData += strlen(_fullName) + 1;
+    payloadData += COMPLETE_NAME;
+    payloadData += _fullName;    
+  }
+
+  /**
+   * 02 01 06                             ← Flags
+   * 0B (length) -- 09 (name indicator) -- 44 49 59 2D 73 65 6E 73 6F 72  ← Complete Local Name: “DIY-sensor”
+   * 0A (length) -- 16 (payload indicator) -- D2 FC 40 02 C4 09 03 BF 13    ← BTHome Service Data
+   *
+   * Or another example:
+   * 02 01 06                                     │ Flags
+   * 05 08 44 49 59 2D                            │ Length=5, AD type=0x08, "DIY-"
+   * 0B 09 44 49 59 2D 73 65 6E 73 6F 72          │ Length=11, AD type=0x09, "DIY-sensor"
+   * 0A 16 D2 FC 40 ...                           │ BTHome service data
+   */
 
   serviceData += SERVICE_DATA; // DO NOT CHANGE -- Service Data - 16-bit UUID
   serviceData += UUID1;        // DO NOT CHANGE -- UUID
