@@ -9,20 +9,11 @@ BaseDevice::BaseDevice(const char *shortName, const char *completeName, bool isT
     : _triggerdevice(isTriggerBased)
 {
 
-  Serial.print("Short name: ");
-  Serial.print(shortName);
   strncpy(_shortName, shortName, MAX_LENGTH_SHORT_NAME);
   _shortName[MAX_LENGTH_SHORT_NAME] = '\0';
-  Serial.print(" ");
-  
-  Serial.println(_shortName);
 
-  Serial.print(" Complete name: ");
-  Serial.print(completeName);
   strncpy(_completeName, completeName, MAX_LENGTH_COMPLETE_NAME);
   _completeName[MAX_LENGTH_COMPLETE_NAME] = '\0';
-  Serial.print(" ");
-  Serial.println(_completeName);
 
   // 27 bytes left after flags and other headers
   _maximumMeasurementBytes = 27 - strlen(_shortName) - 2; // 2 bytes for the name id and size byte
