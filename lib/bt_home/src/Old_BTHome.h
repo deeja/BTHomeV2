@@ -4,7 +4,7 @@
 
 class Old_BTHome {
   public:
-    Old_BTHome(const char* device_name = "DIY-sensor",  bool trigger_based_device = false);
+    Old_BTHome(const char* shortName, const char* fullName, bool isTriggerBased);
     std::string buildPacket();
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
@@ -17,7 +17,8 @@ class Old_BTHome {
     bool pushBytes(uint64_t value2, BtHomeType sensor);
     uint8_t _sensorDataIdx = 0;    
     byte _sensorData[MEASUREMENT_MAX_LEN] = {0};
-    String _device_name;
+    const char* _shortName;
+    const char* _fullName;
     template <typename T>
     bool addInteger(BtHomeType sensor, T value);
     bool _triggerdevice;

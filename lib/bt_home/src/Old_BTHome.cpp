@@ -1,10 +1,11 @@
 #include "Arduino.h"
 #include "Old_BTHome.h"
 
-/// @brief Initialize the Old_BTHome object.
-/// @param device_name
-/// @param trigger_based_device
-Old_BTHome::Old_BTHome(const char* device_name, bool trigger_based_device) : _device_name(device_name), _triggerdevice(trigger_based_device)
+/// @brief 
+/// @param shortName - Short name of the device - sent when space is limited. Max 12 characters.
+/// @param fullName - Full name of the device - sent when space is available.
+/// @param isTriggerBased 
+Old_BTHome::Old_BTHome(const char *shortName, const char *fullName, bool isTriggerBased) : _shortName(shortName), _fullName(fullName), _triggerdevice(isTriggerBased)
 {
 }
 
@@ -42,24 +43,24 @@ bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 
 bool Old_BTHome::addUnsignedInteger(BtHomeType sensor, uint64_t value)
 {
-    return addInteger(sensor, value);
+  return addInteger(sensor, value);
 }
 
 bool Old_BTHome::addSignedInteger(BtHomeType sensor, int64_t value)
 {
-    return addInteger(sensor, value);
+  return addInteger(sensor, value);
 }
 
 template <typename T>
 bool Old_BTHome::addInteger(BtHomeType sensor, T value)
 {
-    uint8_t size = sensor.bytecount;
-    if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
-    {
-        return false;
-    }
-    auto scaledValue = static_cast<T>(static_cast<double>(value) / sensor.scale);
-    return pushBytes(scaledValue, sensor);
+  uint8_t size = sensor.bytecount;
+  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
+  {
+    return false;
+  }
+  auto scaledValue = static_cast<T>(static_cast<double>(value) / sensor.scale);
+  return pushBytes(scaledValue, sensor);
 }
 
 /// @brief Float data
@@ -70,15 +71,16 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
 {
   if ((_sensorDataIdx + sensor.bytecount + 1) > (MEASUREMENT_MAX_LEN))
   {
-    return false; 
+    return false;
   }
 
   float factor = sensor.scale;
-  float scaledValue = value / factor;  
+  float scaledValue = value / factor;
   return pushBytes(static_cast<uint64_t>(scaledValue), sensor);
 }
 
-bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor){
+bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
+{
   _sensorData[_sensorDataIdx] = sensor.id;
   _sensorDataIdx++;
   for (uint8_t i = 0; i < sensor.bytecount; i++)
@@ -143,9 +145,9 @@ std::string Old_BTHome::buildPacket()
 
   uint8_t serviceDataLength = serviceData.length(); // Generate the length of the Service Data
   Serial.println("Service Data Length: " + String(serviceDataLength));
-  
-  payloadData += serviceDataLength;              // Add the length of the Service Data
-  payloadData += serviceData;            // Finalize the packet
+
+  payloadData += serviceDataLength; // Add the length of the Service Data
+  payloadData += serviceData;       // Finalize the packet
 
   // Output payloadData as hex
   std::string hexStr;

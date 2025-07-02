@@ -10,10 +10,10 @@ void BtHome::clearMeasurementData()
 /// @return
 std::string BtHome::getBytes()
 {
-    return _oldbthome.buildPacket(); // TODO: get the data
+    return _oldbthome.buildPacket(); 
 }
 
-BtHome::BtHome(const char *deviceName, bool isTriggerDevice) : _oldbthome(deviceName, isTriggerDevice) // Initialize with default device name and trigger-based device flag
+BtHome::BtHome(const char *shortName, const char *fullName, bool isTriggerDevice) : _oldbthome(shortName, fullName, isTriggerDevice) // Initialize with default device name and trigger-based device flag
 {
 }
 
@@ -56,6 +56,7 @@ bool BtHome::addCount_0_4294967295(uint32_t count)
 {
     return _oldbthome.addUnsignedInteger(count_uint32, count);
 }
+
 bool BtHome::addCount_0_255(uint8_t count)
 {
     Serial.print("Adding count 0-255: ");

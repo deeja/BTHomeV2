@@ -25,7 +25,7 @@ void test_packetLength()
     // D2FC40 = BTHome UUID
 
     Serial.println("Testing BtHome packet length...");
-    BtHome btHome("CountTest", false);
+    BtHome btHome("TestDevice","TestDevice", false);
     // 4 bytes
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
@@ -40,7 +40,7 @@ void test_packetLength()
 void test_addTemperature()
 {
     Serial.println("Testing BtHome getBytes method...");
-    BtHome btHome("TestDevice", false);
+    BtHome btHome("TestDevice","TestDevice", false);
     std::string result = btHome.getBytes();
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
     btHome.addTemperature(-22.0f, RANGE_127_RESOLUTION_1);
@@ -55,7 +55,7 @@ void test_addTemperature()
 
 void test_addDistance()
 {
-    BtHome btHome("TestDevice", false);
+    BtHome btHome("TestDevice","TestDevice", false);
     std::string result = btHome.getBytes();
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
     btHome.addDistanceMetres(7.8);
@@ -66,7 +66,7 @@ void test_addDistance()
 
 void test_addCount_unsigned_integer()
 {
-    BtHome btHome("TestDevice", false);
+    BtHome btHome("TestDevice","TestDevice", false);
 
     TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", btHome.getBytes().c_str());
     bool success = btHome.addCount_0_255(96);
@@ -83,7 +83,7 @@ void test_addCount_unsigned_integer()
 
 void test_addCount_signed_integer()
 {
-    BtHome btHome("TestDevice", false);
+    BtHome btHome("TestDevice","TestDevice", false);
     btHome.addCount_neg128_127(-22);
     TEST_ASSERT_EQUAL_STRING("0201060616D2FC4059EA", btHome.getBytes().c_str());
 

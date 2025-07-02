@@ -14,18 +14,13 @@ void setup()
 
   Serial.println("Starting BT Home Example...");
 
-
-  BtHome btHome("TestDevice", false);
+  BtHome btHome("Short", "Long Name", false);
   std::string result = btHome.getBytes();
 
   btHome.addCount_0_255(22);
   printBytes(btHome.getBytes());
   btHome.addCount_0_255(22);
   printBytes(btHome.getBytes());
-
-
-
-
 
 }
 

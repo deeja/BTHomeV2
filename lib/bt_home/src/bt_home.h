@@ -38,9 +38,13 @@ enum VoltageRangeResolution
 class BtHome
 {
 public:
-    BtHome(const char* deviceName, bool isTriggerDevice);
+    /// @brief
+    /// @param shortName Short name of the device - sent when space is limited. Max 12 characters
+    /// @param fullName  Full name of the device - sent when space is available
+    /// @param isTriggerDevice - If the device sends data when triggered
+    BtHome(const char *shortName, const char *fullName, bool isTriggerDevice);
 
-    std::string  getBytes();
+    std::string getBytes();
     void clearMeasurementData();
 
     /**
