@@ -138,7 +138,7 @@ bool BaseDevice::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
 
 size_t BaseDevice::getAdvertisementData(uint8_t *buffer)
 {
-  /**
+    /**
    * 02 01 06                             ← Flags
    * 0B (length) -- 09 (name indicator) -- 44 49 59 2D 73 65 6E 73 6F 72  ← Complete Local Name: “DIY-sensor”
    * 0A (length) -- 16 (payload indicator) -- D2 FC 40 02 C4 09 03 BF 13    ← BTHome Service Data
@@ -149,74 +149,54 @@ size_t BaseDevice::getAdvertisementData(uint8_t *buffer)
    * 0B 09 44 49 59 2D 73 65 6E 73 6F 72          │ Length=11, AD type=0x09, "DIY-sensor"
    * 0A 16 D2 FC 40 ...                           │ BTHome service data
    */
+  size_t idx = 0; // Tracks the next write position in buffer
 
-  // Create the BLE Device
-  std::string payloadData = "";
-  std::string serviceData = "";
-  uint8_t i;
+  // 1. Flags
+  buffer[idx++] = FLAG1;
+  buffer[idx++] = FLAG2;
+  buffer[idx++] = FLAG3;
 
-  // head
-  payloadData += FLAG1;
-  payloadData += FLAG2;
-  payloadData += FLAG3;
-
+  // 2. Name (Complete or Short)
   uint8_t completeNameLength = strlen(_completeName);
   uint8_t shortNameLength = strlen(_shortName);
 
   bool canFitLongName = (completeNameLength - shortNameLength) + _sensorDataIdx <= _maximumMeasurementBytes;
 
-  if (canFitLongName)
-  {
-
-    payloadData += completeNameLength + 1;
-    payloadData += COMPLETE_NAME;
-    payloadData.append(_completeName, completeNameLength);
-  }
-  else
-  {
-    payloadData += shortNameLength + 1;
-    payloadData += SHORT_NAME;
-    payloadData.append(_shortName, shortNameLength);
+  if (canFitLongName) {
+    buffer[idx++] = completeNameLength + 1; // Length of this AD field
+    buffer[idx++] = COMPLETE_NAME;          // 0x09 for complete name
+    memcpy(&buffer[idx], _completeName, completeNameLength);
+    idx += completeNameLength;
+  } else {
+    buffer[idx++] = shortNameLength + 1;
+    buffer[idx++] = SHORT_NAME;             // 0x08 for short name
+    memcpy(&buffer[idx], _shortName, shortNameLength);
+    idx += shortNameLength;
   }
 
-  serviceData += SERVICE_DATA; // DO NOT CHANGE -- Service Data - 16-bit UUID
-  serviceData += UUID1;        // DO NOT CHANGE -- UUID
-  serviceData += UUID2;        // DO NOT CHANGE -- UUID
-                               // The encryption
+  // 3. Service Data
+  size_t serviceDataStart = idx; // Remember where service data starts
+  buffer[idx++] = 3 + 1 + _sensorDataIdx; // Service Data length (UUID(2) + header(1) + sensorData)
+  buffer[idx++] = SERVICE_DATA;            // 0x16
+  buffer[idx++] = UUID1;                   // 0xD2
+  buffer[idx++] = UUID2;                   // 0xFC
 
+  // Header (no encryption vs trigger based)
   if (_triggerDevice)
-    serviceData += NO_ENCRYPT_TRIGGER_BASE;
+    buffer[idx++] = NO_ENCRYPT_TRIGGER_BASE;
   else
-    serviceData += NO_ENCRYPT;
+    buffer[idx++] = NO_ENCRYPT;
 
-  for (i = 0; i < _sensorDataIdx; i++)
-  {
-    serviceData += _sensorData[i]; // Add the sensor data to the Service Data
-  }
+  // Sensor Data
+  for (size_t i = 0; i < _sensorDataIdx; i++)
+    buffer[idx++] = _sensorData[i];
 
-  uint8_t serviceDataLength = serviceData.length(); // Generate the length of the Service Data
-  Serial.println("Service Data Length: " + String(serviceDataLength));
+  // (No need to separately "add length" at the end; done above)
 
-  payloadData += serviceDataLength; // Add the length of the Service Data
-  payloadData += serviceData;       // Finalize the packet
+  // Optionally: print total length for debugging
+  Serial.print("Advertisement total length: ");
+  Serial.println(idx);
 
-
-  for (size_t i = 0; i < payloadData.length(); i++)
-  {
-    buffer[i] = static_cast<uint8_t>(payloadData[i]);
-  }
-  
-
-  // // Output payloadData as hex
-  // std::string hexStr;
-  // for (unsigned char c : payloadData)
-  // {
-  //   char buf[3];
-  //   snprintf(buf, sizeof(buf), "%02X", static_cast<unsigned char>(c));
-  //   hexStr += buf;
-  // }
-
-
-
-  return payloadData.length();
+  return idx; // Number of bytes written to buffer
 }
+
