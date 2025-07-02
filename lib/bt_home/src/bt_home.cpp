@@ -54,27 +54,29 @@ bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution ran
 
 bool BtHome::addCount_0_4294967295(uint32_t count)
 {
-    return _oldbthome.addInteger(count_uint32, count);
+    return _oldbthome.addUnsignedInteger(count_uint32, count);
 }
 bool BtHome::addCount_0_255(uint8_t count)
 {
-    return _oldbthome.addInteger(count_uint8, count);
+    Serial.print("Adding count 0-255: ");
+    Serial.println(count);
+    return _oldbthome.addUnsignedInteger(count_uint8, count);
 }
 bool BtHome::addCount_0_65535(uint16_t count)
 {
-    return _oldbthome.addInteger(count_uint16, count);
+    return _oldbthome.addUnsignedInteger(count_uint16, count);
 }
 bool BtHome::addCount_neg128_127(int8_t count)
 {
-    return _oldbthome.addInteger(count_int8, count);
+    return _oldbthome.addSignedInteger(count_int8, static_cast<uint64_t>(count));
 }
 bool BtHome::addCount_neg32768_32767(int16_t count)
 {
-    return _oldbthome.addInteger(count_int16, count);
+    return _oldbthome.addSignedInteger(count_int16, static_cast<uint64_t>(count));
 }
 bool BtHome::addCount_neg2147483648_2147483647(int32_t count)
 {
-    return _oldbthome.addInteger(count_int32, count);
+    return _oldbthome.addSignedInteger(count_int32, static_cast<uint64_t>(count));
 }
 
 bool BtHome::addVoltage(float voltage, VoltageRangeResolution rangeResolution)

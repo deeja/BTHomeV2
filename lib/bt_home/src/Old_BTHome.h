@@ -8,7 +8,8 @@ class Old_BTHome {
     std::string buildPacket();
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
-    bool addInteger(BtHomeType sensor, uint64_t value);
+    bool addUnsignedInteger(BtHomeType sensor, uint64_t value);
+    bool addSignedInteger(BtHomeType sensor, int64_t value);
     bool addFloat(BtHomeType sensor, float value);
     bool addRaw(BtHomeType sensor, uint8_t *value, uint8_t size);
 

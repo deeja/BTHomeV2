@@ -32,7 +32,7 @@ void test_packetLength()
     // 6 bytes
     TEST_ASSERT_EQUAL_STRING("0201060616D2FC400901", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
-    // 8 bytes 
+    // 8 bytes
     TEST_ASSERT_EQUAL_STRING("0201060816D2FC4009010901", btHome.getBytes().c_str());
     btHome.addCount_0_255(1);
 }
@@ -64,30 +64,34 @@ void test_addDistance()
     TEST_ASSERT_EQUAL_STRING("0201060A16D2FC40414E00400C00", btHome.getBytes().c_str());
 }
 
-void test_addCount()
+void test_addCount_unsigned_integer()
 {
     BtHome btHome("TestDevice", false);
-    std::string result = btHome.getBytes();
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", result.c_str());
+
+    TEST_ASSERT_EQUAL_STRING("0201060416D2FC40", btHome.getBytes().c_str());
     bool success = btHome.addCount_0_255(96);
     TEST_ASSERT_TRUE(success);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC400960", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060616D2FC400960", btHome.getBytes().c_str());
 
     btHome.addCount_0_65535(24585);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D0960", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060916D2FC4009603D0960", btHome.getBytes().c_str());
 
+     
     btHome.addCount_0_4294967295(1611213866);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C0960", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4009603D09603E2A2C0960", btHome.getBytes().c_str());
+}
 
+void test_addCount_signed_integer()
+{
+    BtHome btHome("TestDevice", false);
     btHome.addCount_neg128_127(-22);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C096059EA", result.c_str());
-
+    TEST_ASSERT_EQUAL_STRING("0201060616D2FC4059EA", btHome.getBytes().c_str());
 
     btHome.addCount_neg32768_32767(-5398);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C096059EA5AEAEA", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060916D2FC4059EA5AEAEA", btHome.getBytes().c_str());
 
     btHome.addCount_neg2147483648_2147483647(-365690134);
-    TEST_ASSERT_EQUAL_STRING("0201060416D2FC4009603D09603E2A2C096059EA5AEAEA5BEA0234EA", result.c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4059EA5AEAEA5BEA0234EA", btHome.getBytes().c_str());
 }
 
 void setup()
@@ -105,7 +109,8 @@ void loop()
     RUN_TEST(test_packetLength);
     RUN_TEST(test_addTemperature);
     RUN_TEST(test_addDistance);
-    RUN_TEST(test_addCount);
+    RUN_TEST(test_addCount_signed_integer);
+    RUN_TEST(test_addCount_unsigned_integer);
 
     delay(500);
     UNITY_END(); // stop unit testing
