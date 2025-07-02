@@ -1,0 +1,3 @@
+[submodule "lib/BTHomeV2-Arduino"]
+	path = lib/BTHomeV2-Arduino
+	url = https://github.com/deeja/BTHomeV2-Arduino.git
