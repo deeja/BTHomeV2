@@ -1,9 +1,6 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 #define BLE_ADVERT_MAX_LEN 31
-#define BIND_KEY_LEN 16
-#define NONCE_LEN 13
-#define MIC_LEN 4
 
 #define FLAG 0x020106
 #define FLAG1 0x02
@@ -22,48 +19,6 @@
 #define SHORT_NAME 0x08
 #define COMPLETE_NAME 0x09
 
-#define ID_PACKET 0x00
-#define ID_BATTERY 0x01
-#define ID_CO2 0x12
-#define ID_COUNT 0x09
-#define ID_COUNT2 0x3D
-#define ID_COUNT4 0x3E
-#define ID_CURRENT 0x43
-#define ID_DEWPOINT 0x08
-#define ID_DISTANCE 0x40
-#define ID_DISTANCEM 0x41
-#define ID_DURATION 0x42
-#define ID_ENERGY 0x0A
-#define ID_ENERGY4 0x4D
-#define ID_GAS 0x4B
-#define ID_GAS4 0x4C
-#define ID_HUMIDITY 0x2E
-#define ID_HUMIDITY_PRECISE 0x03
-#define ID_ILLUMINANCE 0x05
-#define ID_MASS 0x06
-#define ID_MASSLB 0x07
-#define ID_MOISTURE 0x2F
-#define ID_MOISTURE_PRECISE 0x14
-#define ID_PM25 0x0D
-#define ID_PM10 0x0E
-#define ID_POWER 0x0B
-#define ID_PRESSURE 0x04
-#define ID_ROTATION 0x3F
-#define ID_SPD 0x44
-#define ID_TEMPERATURE_PRECISE 0x02
-#define ID_TEMPERATURE 0x45
-#define ID_TVOC 0x13
-#define ID_VOLTAGE 0x0C
-#define ID_VOLTAGE1 0x4A
-#define ID_VOLUME 0x4E
-#define ID_VOLUME1 0x47
-#define ID_VOLUME2 0x48
-#define ID_VOLUMEFR 0x49
-#define ID_UV 0x46
-#define ID_WATER 0x4F
-#define ID_TIMESTAMP 0x50
-#define ID_TEXT 0x53
-#define ID_RAW 0x54
 
 #define STATE_BATTERY_LOW 0x15
 #define STATE_BATTERY_CHARHING 0x16
