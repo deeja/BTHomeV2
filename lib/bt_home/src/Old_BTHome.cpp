@@ -7,6 +7,8 @@
 /// @param isTriggerBased
 Old_BTHome::Old_BTHome(const char *shortName, const char *fullName, bool isTriggerBased) : _shortName(shortName), _fullName(fullName), _triggerdevice(isTriggerBased)
 {
+  // 27 bytes left after flags and other headers
+  _maximumMeasurementBytes = 27 - strlen(_shortName) - 2; // 2 bytes for the name id and size byte
 }
 
 /// @brief Clear the measurement data.
@@ -23,9 +25,8 @@ bool Old_BTHome::hasEnoughSpace(BtHomeType sensor)
 {
   // minimum space is needed for the short name, but if there is spare room then we can use the full name
   uint8_t shortNameSize = strlen(_shortName) + 2; // 1 byte for the name id and one for the size byte
-  return ((_sensorDataIdx + sensor.byteCount + 1) <= (MEASUREMENT_MAX_LEN - shortNameSize));
+  return (_sensorDataIdx + sensor.byteCount + 1) <= _maximumMeasurementBytes;
 }
-
 
 /// @brief Add a state or step value to the sensor data packet.
 /// @param sensor
@@ -34,7 +35,7 @@ bool Old_BTHome::hasEnoughSpace(BtHomeType sensor)
 /// @return
 bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 {
-  if ((_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= (MEASUREMENT_MAX_LEN - (0)))
+  if ((_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= _maximumMeasurementBytes)
   {
     _sensorData[_sensorDataIdx] = sensor.id;
     _sensorDataIdx++;
@@ -109,7 +110,7 @@ bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
 /// @return
 bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
 {
-  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN - strlen(_shortName) - 2)) 
+  if ((_sensorDataIdx + size + 1) > _maximumMeasurementBytes)
   // TODO: see if this can be moved to the hasEnoughSpace function
   {
     return false;
@@ -127,38 +128,8 @@ bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
   return true;
 }
 
-
-
 std::string Old_BTHome::buildPacket()
-{
-
-  // Create the BLE Device
-  std::string payloadData = "";
-  std::string serviceData = "";
-  uint8_t i;
-
-  // head
-  payloadData += FLAG1;
-  payloadData += FLAG2;
-  payloadData += FLAG3;
-
-
-  bool restricted = false;
-  if (restricted)
-  {
-    
-    payloadData += strlen(_shortName) + 1;
-    payloadData += SHORT_NAME;
-    payloadData += _shortName;    
-  }
-  else
-  {
-    
-    payloadData += strlen(_fullName) + 1;
-    payloadData += COMPLETE_NAME;
-    payloadData += _fullName;    
-  }
-
+{  
   /**
    * 02 01 06                             ← Flags
    * 0B (length) -- 09 (name indicator) -- 44 49 59 2D 73 65 6E 73 6F 72  ← Complete Local Name: “DIY-sensor”
@@ -170,6 +141,32 @@ std::string Old_BTHome::buildPacket()
    * 0B 09 44 49 59 2D 73 65 6E 73 6F 72          │ Length=11, AD type=0x09, "DIY-sensor"
    * 0A 16 D2 FC 40 ...                           │ BTHome service data
    */
+
+  // Create the BLE Device
+  std::string payloadData = "";
+  std::string serviceData = "";
+  uint8_t i;
+
+  // head
+  payloadData += FLAG1;
+  payloadData += FLAG2;
+  payloadData += FLAG3;
+
+  bool canFitLongName = (strlen(_fullName) - strlen(_shortName)) + serviceData.length() <= _maximumMeasurementBytes;
+
+  if (canFitLongName)
+  {
+
+    payloadData += strlen(_fullName) + 1;
+    payloadData += COMPLETE_NAME;
+    payloadData += _fullName;
+  }
+  else
+  {
+    payloadData += strlen(_shortName) + 1;
+    payloadData += SHORT_NAME;
+    payloadData += _shortName;
+  }
 
   serviceData += SERVICE_DATA; // DO NOT CHANGE -- Service Data - 16-bit UUID
   serviceData += UUID1;        // DO NOT CHANGE -- UUID

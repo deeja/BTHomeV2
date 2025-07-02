@@ -1,7 +1,6 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 #define BLE_ADVERT_MAX_LEN 31
-#define MEASUREMENT_MAX_LEN 23 //23=31(BLE_ADVERT_MAX_LEN)-3(FLAG)-1(SERVICE_DATA)-2(UUID)-1(ENCRYPT)-1(serviceData length bit)
 #define BIND_KEY_LEN 16
 #define NONCE_LEN 13
 #define MIC_LEN 4

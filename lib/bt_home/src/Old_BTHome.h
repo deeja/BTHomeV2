@@ -15,8 +15,9 @@ class Old_BTHome {
 
   private:
     bool pushBytes(uint64_t value2, BtHomeType sensor);
+    uint8_t _maximumMeasurementBytes;
     uint8_t _sensorDataIdx = 0;    
-    byte _sensorData[MEASUREMENT_MAX_LEN] = {0};
+    byte _sensorData[BLE_ADVERT_MAX_LEN] = {0};
     const char* _shortName;
     const char* _fullName;
     bool hasEnoughSpace(BtHomeType sensor);
