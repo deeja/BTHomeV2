@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <bt_home.h>
+#include <BtHomeV2Device.h>
 
 // Overload for std::string (treat as raw bytes)
 void printBytes(const std::string &bytes)
@@ -14,9 +14,9 @@ void setup()
 
   Serial.println("Starting BT Home Example...");
 
-  BtHome btHome("Short", "Long Name", false);
-  std::string result = btHome.getBytes();
+  BtHomeV2Device btHome("DIY-sensor", "DIY-sensor", false);
 
+  printBytes(btHome.getBytes());
   btHome.addCount_0_255(22);
   printBytes(btHome.getBytes());
   btHome.addCount_0_255(22);

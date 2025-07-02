@@ -4,7 +4,7 @@
 // https://bthome.io/format/
 
 #include <Arduino.h>
-#include "Old_BTHome.h"
+#include "BaseDevice.h"
 
 /**
  * @file BTHome.h
@@ -35,14 +35,14 @@ enum VoltageRangeResolution
     RANGE_65535_RESOLUTION_0_1
 };
 
-class BtHome
+class BtHomeV2Device
 {
 public:
     /// @brief
     /// @param shortName Short name of the device - sent when space is limited. Max 12 characters
-    /// @param fullName  Full name of the device - sent when space is available
+    /// @param completeName  Full name of the device - sent when space is available
     /// @param isTriggerDevice - If the device sends data when triggered
-    BtHome(const char *shortName, const char *fullName, bool isTriggerDevice);
+    BtHomeV2Device(const char *shortName, const char *completeName, bool isTriggerDevice);
 
     std::string getBytes();
     void clearMeasurementData();
@@ -230,7 +230,7 @@ private:
     bool addMeasurement(uint8_t dataTypeId, const uint8_t *data, size_t len);
     bool addLocalName(const char *name, bool isShortName);
 
-    Old_BTHome _oldbthome;
+    BaseDevice _oldbthome;
     uint8_t _measurementData[MAX_PAYLOAD_SIZE];
     size_t _measurementDataLength = 0;
     size_t _lengthByte;

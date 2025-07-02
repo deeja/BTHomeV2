@@ -1,18 +1,35 @@
 #include "Arduino.h"
-#include "Old_BTHome.h"
+#include "BaseDevice.h"
 
 /// @brief
 /// @param shortName - Short name of the device - sent when space is limited. Max 12 characters.
-/// @param fullName - Full name of the device - sent when space is available.
+/// @param completeName - Full name of the device - sent when space is available.
 /// @param isTriggerBased
-Old_BTHome::Old_BTHome(const char *shortName, const char *fullName, bool isTriggerBased) : _shortName(shortName), _fullName(fullName), _triggerdevice(isTriggerBased)
+BaseDevice::BaseDevice(const char *shortName, const char *completeName, bool isTriggerBased)
+    : _triggerdevice(isTriggerBased)
 {
+
+  Serial.print("Short name: ");
+  Serial.print(shortName);
+  strncpy(_shortName, shortName, MAX_LENGTH_SHORT_NAME);
+  _shortName[MAX_LENGTH_SHORT_NAME] = '\0';
+  Serial.print(" ");
+  
+  Serial.println(_shortName);
+
+  Serial.print(" Complete name: ");
+  Serial.print(completeName);
+  strncpy(_completeName, completeName, MAX_LENGTH_COMPLETE_NAME);
+  _completeName[MAX_LENGTH_COMPLETE_NAME] = '\0';
+  Serial.print(" ");
+  Serial.println(_completeName);
+
   // 27 bytes left after flags and other headers
   _maximumMeasurementBytes = 27 - strlen(_shortName) - 2; // 2 bytes for the name id and size byte
 }
 
 /// @brief Clear the measurement data.
-void Old_BTHome::resetMeasurement()
+void BaseDevice::resetMeasurement()
 {
   _sensorDataIdx = 0;
 }
@@ -21,7 +38,7 @@ void Old_BTHome::resetMeasurement()
 /// @details The sensor data packet has a maximum length defined by MEASUREMENT_MAX_LEN.
 /// @param size
 /// @return Returns true if there is enough space for the given size, false otherwise.
-bool Old_BTHome::hasEnoughSpace(BtHomeType sensor)
+bool BaseDevice::hasEnoughSpace(BtHomeType sensor)
 {
   // minimum space is needed for the short name, but if there is spare room then we can use the full name
   uint8_t shortNameSize = strlen(_shortName) + 2; // 1 byte for the name id and one for the size byte
@@ -33,7 +50,7 @@ bool Old_BTHome::hasEnoughSpace(BtHomeType sensor)
 /// @param state
 /// @param steps
 /// @return
-bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
+bool BaseDevice::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
 {
   if ((_sensorDataIdx + 2 + (steps > 0 ? 1 : 0)) <= _maximumMeasurementBytes)
   {
@@ -54,18 +71,18 @@ bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
   return true;
 }
 
-bool Old_BTHome::addUnsignedInteger(BtHomeType sensor, uint64_t value)
+bool BaseDevice::addUnsignedInteger(BtHomeType sensor, uint64_t value)
 {
   return addInteger(sensor, value);
 }
 
-bool Old_BTHome::addSignedInteger(BtHomeType sensor, int64_t value)
+bool BaseDevice::addSignedInteger(BtHomeType sensor, int64_t value)
 {
   return addInteger(sensor, value);
 }
 
 template <typename T>
-bool Old_BTHome::addInteger(BtHomeType sensor, T value)
+bool BaseDevice::addInteger(BtHomeType sensor, T value)
 {
   if (!hasEnoughSpace(sensor))
   {
@@ -79,7 +96,7 @@ bool Old_BTHome::addInteger(BtHomeType sensor, T value)
 /// @param sensor
 /// @param value
 /// @return
-bool Old_BTHome::addFloat(BtHomeType sensor, float value)
+bool BaseDevice::addFloat(BtHomeType sensor, float value)
 {
   if (!hasEnoughSpace(sensor))
   {
@@ -91,7 +108,7 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
   return pushBytes(static_cast<uint64_t>(scaledValue), sensor);
 }
 
-bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
+bool BaseDevice::pushBytes(uint64_t value2, BtHomeType sensor)
 {
   _sensorData[_sensorDataIdx] = sensor.id;
   _sensorDataIdx++;
@@ -108,7 +125,7 @@ bool Old_BTHome::pushBytes(uint64_t value2, BtHomeType sensor)
 /// @param value
 /// @param size
 /// @return
-bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
+bool BaseDevice::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
 {
   if ((_sensorDataIdx + size + 1) > _maximumMeasurementBytes)
   // TODO: see if this can be moved to the hasEnoughSpace function
@@ -128,8 +145,8 @@ bool Old_BTHome::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
   return true;
 }
 
-std::string Old_BTHome::buildPacket()
-{  
+std::string BaseDevice::buildAdvertisement()
+{
   /**
    * 02 01 06                             ← Flags
    * 0B (length) -- 09 (name indicator) -- 44 49 59 2D 73 65 6E 73 6F 72  ← Complete Local Name: “DIY-sensor”
@@ -152,21 +169,23 @@ std::string Old_BTHome::buildPacket()
   payloadData += FLAG2;
   payloadData += FLAG3;
 
-  bool canFitLongName = (strlen(_fullName) - strlen(_shortName)) + _sensorDataIdx <= _maximumMeasurementBytes;
+  uint8_t completeNameLength = strlen(_completeName);
+  uint8_t shortNameLength = strlen(_shortName);
+
+  bool canFitLongName = (completeNameLength - shortNameLength) + _sensorDataIdx <= _maximumMeasurementBytes;
 
   if (canFitLongName)
   {
 
-    payloadData += strlen(_fullName) + 1;
+    payloadData += completeNameLength + 1;
     payloadData += COMPLETE_NAME;
-    payloadData += _fullName;
-    
+    payloadData.append(_completeName, completeNameLength);
   }
   else
   {
-    payloadData += strlen(_shortName) + 1;
+    payloadData += shortNameLength + 1;
     payloadData += SHORT_NAME;
-    payloadData += _shortName;
+    payloadData.append(_shortName, shortNameLength);
   }
 
   serviceData += SERVICE_DATA; // DO NOT CHANGE -- Service Data - 16-bit UUID

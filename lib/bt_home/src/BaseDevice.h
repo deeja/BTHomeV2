@@ -2,10 +2,10 @@
 #include <Arduino.h>
 #include <data_types.h>
 
-class Old_BTHome {
+class BaseDevice {
   public:
-    Old_BTHome(const char* shortName, const char* fullName, bool isTriggerBased);
-    std::string buildPacket();
+    BaseDevice( const char* shortName,  const char* completeName, bool isTriggerBased);
+    std::string buildAdvertisement();
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
     bool addUnsignedInteger(BtHomeType sensor, uint64_t value);
@@ -18,8 +18,8 @@ class Old_BTHome {
     uint8_t _maximumMeasurementBytes;
     uint8_t _sensorDataIdx = 0;    
     byte _sensorData[BLE_ADVERT_MAX_LEN] = {0};
-    const char* _shortName;
-    const char* _fullName;
+    char _shortName[MAX_LENGTH_SHORT_NAME];
+    char _completeName[MAX_LENGTH_COMPLETE_NAME];
     bool hasEnoughSpace(BtHomeType sensor);
     template <typename T>
     bool addInteger(BtHomeType sensor, T value);

@@ -1,6 +1,6 @@
-#include "bt_home.h"
+#include "BtHomeV2Device.h"
 
-void BtHome::clearMeasurementData()
+void BtHomeV2Device::clearMeasurementData()
 {
     return _oldbthome.resetMeasurement();
 }
@@ -8,26 +8,26 @@ void BtHome::clearMeasurementData()
 /// @brief Builds an outgoing wrapper for the current measurement data.
 /// @param payload
 /// @return
-std::string BtHome::getBytes()
+std::string BtHomeV2Device::getBytes()
 {
-    return _oldbthome.buildPacket(); 
+    return _oldbthome.buildAdvertisement(); 
 }
 
-BtHome::BtHome(const char *shortName, const char *fullName, bool isTriggerDevice) : _oldbthome(shortName, fullName, isTriggerDevice) // Initialize with default device name and trigger-based device flag
+BtHomeV2Device::BtHomeV2Device( const char *shortName,  const char *completeName, bool isTriggerDevice) : _oldbthome(shortName, completeName, isTriggerDevice) // Initialize with default device name and trigger-based device flag
 {
 }
 
-bool BtHome::addDistanceMetres(float metres)
+bool BtHomeV2Device::addDistanceMetres(float metres)
 {
     return _oldbthome.addFloat(distance_metre, metres);
 }
 
-bool BtHome::addDistanceMillimetres(float millimetres)
+bool BtHomeV2Device::addDistanceMillimetres(float millimetres)
 {
     return _oldbthome.addFloat(distance_millimetre, millimetres);
 }
 
-bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution)
+bool BtHomeV2Device::addTemperature(float degreesCelsius, TemperatureRangeResolution rangeResolution)
 {
 
     switch (rangeResolution)
@@ -52,35 +52,35 @@ bool BtHome::addTemperature(float degreesCelsius, TemperatureRangeResolution ran
     return false;
 }
 
-bool BtHome::addCount_0_4294967295(uint32_t count)
+bool BtHomeV2Device::addCount_0_4294967295(uint32_t count)
 {
     return _oldbthome.addUnsignedInteger(count_uint32, count);
 }
 
-bool BtHome::addCount_0_255(uint8_t count)
+bool BtHomeV2Device::addCount_0_255(uint8_t count)
 {
     Serial.print("Adding count 0-255: ");
     Serial.println(count);
     return _oldbthome.addUnsignedInteger(count_uint8, count);
 }
-bool BtHome::addCount_0_65535(uint16_t count)
+bool BtHomeV2Device::addCount_0_65535(uint16_t count)
 {
     return _oldbthome.addUnsignedInteger(count_uint16, count);
 }
-bool BtHome::addCount_neg128_127(int8_t count)
+bool BtHomeV2Device::addCount_neg128_127(int8_t count)
 {
     return _oldbthome.addSignedInteger(count_int8, static_cast<uint64_t>(count));
 }
-bool BtHome::addCount_neg32768_32767(int16_t count)
+bool BtHomeV2Device::addCount_neg32768_32767(int16_t count)
 {
     return _oldbthome.addSignedInteger(count_int16, static_cast<uint64_t>(count));
 }
-bool BtHome::addCount_neg2147483648_2147483647(int32_t count)
+bool BtHomeV2Device::addCount_neg2147483648_2147483647(int32_t count)
 {
     return _oldbthome.addSignedInteger(count_int32, static_cast<uint64_t>(count));
 }
 
-bool BtHome::addVoltage(float voltage, VoltageRangeResolution rangeResolution)
+bool BtHomeV2Device::addVoltage(float voltage, VoltageRangeResolution rangeResolution)
 {
 
     switch (rangeResolution)
@@ -99,7 +99,7 @@ bool BtHome::addVoltage(float voltage, VoltageRangeResolution rangeResolution)
     return false;
 }
 
-bool BtHome::addBatteryPercentage(uint8_t batteryPercentage)
+bool BtHomeV2Device::addBatteryPercentage(uint8_t batteryPercentage)
 {
     return addUInt8(battery_percentage.id, batteryPercentage / battery_percentage.scale);
 }

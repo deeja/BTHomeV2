@@ -2,6 +2,9 @@
 #define DEFINITIONS_H
 #define BLE_ADVERT_MAX_LEN 31
 
+#define MAX_LENGTH_SHORT_NAME 10
+#define MAX_LENGTH_COMPLETE_NAME 20
+
 #define FLAG 0x020106
 #define FLAG1 0x02
 #define FLAG2 0x01
