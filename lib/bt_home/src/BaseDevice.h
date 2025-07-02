@@ -5,7 +5,7 @@
 class BaseDevice {
   public:
     BaseDevice( const char* shortName,  const char* completeName, bool isTriggerBased);
-    std::string buildAdvertisement();
+    size_t getBytes(uint8_t *buffer);
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
     bool addUnsignedInteger(BtHomeType sensor, uint64_t value);

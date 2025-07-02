@@ -15,6 +15,7 @@ void test_completeName()
 {
     TEST_MESSAGE("Testing complete name...");
     BtHomeV2Device btHome("DIY-sensor", "DIY-sensor", false);
+    
     TEST_ASSERT_EQUAL_STRING("0201060B094449592D73656E736F720416D2FC40", btHome.getBytes().c_str());
 
     TEST_MESSAGE("Adding unexpected test name. Should not change the data");

@@ -136,7 +136,7 @@ bool BaseDevice::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
   return true;
 }
 
-std::string BaseDevice::buildAdvertisement()
+size_t BaseDevice::getBytes(uint8_t *buffer)
 {
   /**
    * 02 01 06                             ← Flags
@@ -200,13 +200,23 @@ std::string BaseDevice::buildAdvertisement()
   payloadData += serviceDataLength; // Add the length of the Service Data
   payloadData += serviceData;       // Finalize the packet
 
-  // Output payloadData as hex
-  std::string hexStr;
-  for (unsigned char c : payloadData)
+
+  for (size_t i = 0; i < payloadData.length(); i++)
   {
-    char buf[3];
-    snprintf(buf, sizeof(buf), "%02X", static_cast<unsigned char>(c));
-    hexStr += buf;
+    buffer[i] = static_cast<uint8_t>(payloadData[i]);
   }
-  return hexStr;
+  
+
+  // // Output payloadData as hex
+  // std::string hexStr;
+  // for (unsigned char c : payloadData)
+  // {
+  //   char buf[3];
+  //   snprintf(buf, sizeof(buf), "%02X", static_cast<unsigned char>(c));
+  //   hexStr += buf;
+  // }
+
+
+
+  return payloadData.length();
 }

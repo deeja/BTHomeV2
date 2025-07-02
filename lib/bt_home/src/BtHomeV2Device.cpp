@@ -8,9 +8,9 @@ void BtHomeV2Device::clearMeasurementData()
 /// @brief Builds an outgoing wrapper for the current measurement data.
 /// @param payload
 /// @return
-std::string BtHomeV2Device::getBytes()
+size_t BtHomeV2Device::getBytes(uint8_t *buffer)
 {
-    return _oldbthome.buildAdvertisement(); 
+    return _oldbthome.getBytes(buffer); 
 }
 
 BtHomeV2Device::BtHomeV2Device( const char *shortName,  const char *completeName, bool isTriggerDevice) : _oldbthome(shortName, completeName, isTriggerDevice) // Initialize with default device name and trigger-based device flag
