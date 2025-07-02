@@ -4,7 +4,7 @@
 
 class Old_BTHome {
   public:
-    Old_BTHome(String device_name = "DIY-sensor",  bool trigger_based_device = false);
+    Old_BTHome(const char* device_name = "DIY-sensor",  bool trigger_based_device = false);
     std::string buildPacket();
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);

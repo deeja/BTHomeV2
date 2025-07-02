@@ -4,10 +4,8 @@
 /// @brief Initialize the Old_BTHome object.
 /// @param device_name
 /// @param trigger_based_device
-Old_BTHome::Old_BTHome(String device_name, bool trigger_based_device) : _device_name(device_name), _triggerdevice(trigger_based_device)
+Old_BTHome::Old_BTHome(const char* device_name, bool trigger_based_device) : _device_name(device_name), _triggerdevice(trigger_based_device)
 {
-  _sensorDataIdx = 0; // Initialize the sensor data index
-  memset(_sensorData, 0, sizeof(_sensorData));
 }
 
 /// @brief Clear the measurement data.
