@@ -152,7 +152,7 @@ std::string Old_BTHome::buildPacket()
   payloadData += FLAG2;
   payloadData += FLAG3;
 
-  bool canFitLongName = (strlen(_fullName) - strlen(_shortName)) + serviceData.length() <= _maximumMeasurementBytes;
+  bool canFitLongName = (strlen(_fullName) - strlen(_shortName)) + _sensorDataIdx <= _maximumMeasurementBytes;
 
   if (canFitLongName)
   {
@@ -160,6 +160,7 @@ std::string Old_BTHome::buildPacket()
     payloadData += strlen(_fullName) + 1;
     payloadData += COMPLETE_NAME;
     payloadData += _fullName;
+    
   }
   else
   {

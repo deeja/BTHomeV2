@@ -22,6 +22,29 @@ void test_fullLocalName()
 
 } 
 
+
+void test_fullLocalNameLengthSwitchover()
+{
+    Serial.println("Testing BtHome full local name...");
+    BtHome btHome("bbb","aaaaaaaaaaaa", false);
+    TEST_ASSERT_EQUAL_STRING("0201060D096161616161616161616161610416D2FC40", btHome.getBytes().c_str());
+    btHome.addCount_0_4294967295(1234567890);
+    TEST_ASSERT_EQUAL_STRING("0201060D096161616161616161616161610916D2FC403ED2029649", btHome.getBytes().c_str());
+    btHome.addCount_0_4294967295(1234567890);
+    TEST_ASSERT_EQUAL_STRING("0201060D096161616161616161616161610E16D2FC403ED20296493ED2029649", btHome.getBytes().c_str());
+    btHome.addCount_0_4294967295(1234567890);
+    TEST_ASSERT_EQUAL_STRING("02010604086262621316D2FC403ED20296493ED20296493ED2029649", btHome.getBytes().c_str());
+    btHome.addCount_0_4294967295(1234567890);
+    TEST_ASSERT_EQUAL_STRING("02010604086262621816D2FC403ED20296493ED20296493ED20296493ED2029649", btHome.getBytes().c_str());
+    
+    bool addResult = btHome.addCount_0_4294967295(1234567890);  // can't add more
+    TEST_ASSERT_FALSE(addResult);
+    TEST_ASSERT_EQUAL_STRING("02010604086262621816D2FC403ED20296493ED20296493ED20296493ED2029649", btHome.getBytes().c_str());
+
+
+
+} 
+
 void test_packetLength()
 {
     // Service data (16-bit UUID): 0A 16 D2FC4002C40903BF13 (BTHome data)
@@ -118,6 +141,7 @@ void loop()
 {
     delay(500);
     
+    RUN_TEST(test_fullLocalNameLengthSwitchover);
     RUN_TEST(test_fullLocalName);
     RUN_TEST(test_packetLength);
     RUN_TEST(test_addTemperature);
