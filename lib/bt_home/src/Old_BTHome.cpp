@@ -53,7 +53,7 @@ bool Old_BTHome::addUnsignedInteger(BtHomeType sensor, uint64_t value)
   {
     return false;
   }
-  uint64_t scaledValue = (double)value / (double)sensor.scale;  
+  uint64_t scaledValue = (double)value / sensor.scale;  
   return pushBytes(scaledValue, sensor);
 }
 
@@ -68,7 +68,7 @@ bool Old_BTHome::addSignedInteger(BtHomeType sensor, int64_t value)
   {
     return false;
   }
-  int64_t scaledValue = scaledValue = (double)value / (double)sensor.scale;
+  int64_t scaledValue = scaledValue = (double)value / sensor.scale;
   return pushBytes(scaledValue, sensor);
 }
 
