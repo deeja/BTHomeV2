@@ -43,7 +43,7 @@ public:
     /// @param completeName  Full name of the device - sent when space is available
     /// @param isTriggerDevice - If the device sends data when triggered
     BtHomeV2Device(const char *shortName, const char *completeName, bool isTriggerDevice);
-    size_t getBytes(uint8_t *buffer);
+    size_t getAdvertisementData(uint8_t *buffer);
     void clearMeasurementData();
 
     /**
@@ -229,7 +229,7 @@ private:
     bool addMeasurement(uint8_t dataTypeId, const uint8_t *data, size_t len);
     bool addLocalName(const char *name, bool isShortName);
 
-    BaseDevice _oldbthome;
+    BaseDevice _baseDevice;
     uint8_t _measurementData[MAX_PAYLOAD_SIZE];
     size_t _measurementDataLength = 0;
     size_t _lengthByte;

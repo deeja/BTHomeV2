@@ -11,8 +11,7 @@ void printBytes(const std::string &bytes)
 void setup()
 {
   Serial.begin(115200);
-  delay(50); // Let serial settle
-
+  delay(50); 
   Serial.println("Starting BT Home Example...");
 }
 
@@ -20,15 +19,14 @@ void loop()
 {
   NimBLEDevice::init("NimBLE");
 
-  BtHomeV2Device btHome("DIY-sensor", "My DIY Sensor demo", false);
+  BtHomeV2Device btHome("DIY-sensor", "My DIY Sensor", false);
   btHome.addCount_0_255(22);
 
   uint8_t buffer[MAX_PAYLOAD_SIZE];
-  size_t size = btHome.getBytes(buffer);
+  size_t size = btHome.getAdvertisementData(buffer);
 
   NimBLEAdvertisementData pAdvData = BLEAdvertisementData();
   BLEAdvertisementData oScanResponseData = BLEAdvertisementData();
-
   std::vector<uint8_t> data(buffer, buffer + size);
 
   pAdvData.addData(data);
@@ -37,7 +35,6 @@ void loop()
   pAdvertising->setAdvertisementData(pAdvData);
   oScanResponseData.setName("DIY-sensor");
   pAdvertising->setScanResponseData(oScanResponseData);
-
   pAdvertising->setConnectableMode(0);
 
   Serial.println("Starting advertising...");

@@ -6,7 +6,7 @@
 /// @param completeName - Full name of the device - sent when space is available.
 /// @param isTriggerBased
 BaseDevice::BaseDevice(const char *shortName, const char *completeName, bool isTriggerBased)
-    : _triggerdevice(isTriggerBased)
+    : _triggerDevice(isTriggerBased)
 {
 
   strncpy(_shortName, shortName, MAX_LENGTH_SHORT_NAME);
@@ -136,7 +136,7 @@ bool BaseDevice::addRaw(BtHomeType sensor, uint8_t *value, uint8_t size)
   return true;
 }
 
-size_t BaseDevice::getBytes(uint8_t *buffer)
+size_t BaseDevice::getAdvertisementData(uint8_t *buffer)
 {
   /**
    * 02 01 06                             ← Flags
@@ -184,7 +184,7 @@ size_t BaseDevice::getBytes(uint8_t *buffer)
   serviceData += UUID2;        // DO NOT CHANGE -- UUID
                                // The encryption
 
-  if (_triggerdevice)
+  if (_triggerDevice)
     serviceData += NO_ENCRYPT_TRIGGER_BASE;
   else
     serviceData += NO_ENCRYPT;

@@ -5,7 +5,7 @@
 class BaseDevice {
   public:
     BaseDevice( const char* shortName,  const char* completeName, bool isTriggerBased);
-    size_t getBytes(uint8_t *buffer);
+    size_t getAdvertisementData(uint8_t *buffer);
     void resetMeasurement();
     bool addState(BtHomeType sensor,  uint8_t state, uint8_t steps = 0);
     bool addUnsignedInteger(BtHomeType sensor, uint64_t value);
@@ -23,5 +23,5 @@ class BaseDevice {
     bool hasEnoughSpace(BtHomeType sensor);
     template <typename T>
     bool addInteger(BtHomeType sensor, T value);
-    bool _triggerdevice;
+    bool _triggerDevice;
 };
