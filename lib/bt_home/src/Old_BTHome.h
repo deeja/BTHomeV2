@@ -18,5 +18,7 @@ class Old_BTHome {
     uint8_t _sensorDataIdx = 0;    
     byte _sensorData[MEASUREMENT_MAX_LEN] = {0};
     String _device_name;
+    template <typename T>
+    bool addInteger(BtHomeType sensor, T value);
     bool _triggerdevice;
 };

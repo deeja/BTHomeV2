@@ -42,34 +42,26 @@ bool Old_BTHome::addState(BtHomeType sensor, uint8_t state, uint8_t steps)
   return true;
 }
 
-/// @brief Integer data
-/// @param sensor
-/// @param value
-/// @return
 bool Old_BTHome::addUnsignedInteger(BtHomeType sensor, uint64_t value)
 {
-  uint8_t size = sensor.bytecount;
-  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
-  {
-    return false;
-  }
-  uint64_t scaledValue = (double)value / sensor.scale;  
-  return pushBytes(scaledValue, sensor);
+    return addInteger(sensor, value);
 }
 
-/// @brief Integer data
-/// @param sensor
-/// @param value
-/// @return
 bool Old_BTHome::addSignedInteger(BtHomeType sensor, int64_t value)
 {
-  uint8_t size = sensor.bytecount;
-  if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
-  {
-    return false;
-  }
-  int64_t scaledValue = scaledValue = (double)value / sensor.scale;
-  return pushBytes(scaledValue, sensor);
+    return addInteger(sensor, value);
+}
+
+template <typename T>
+bool Old_BTHome::addInteger(BtHomeType sensor, T value)
+{
+    uint8_t size = sensor.bytecount;
+    if ((_sensorDataIdx + size + 1) > (MEASUREMENT_MAX_LEN))
+    {
+        return false;
+    }
+    auto scaledValue = static_cast<T>(static_cast<double>(value) / sensor.scale);
+    return pushBytes(scaledValue, sensor);
 }
 
 /// @brief Float data
@@ -80,7 +72,7 @@ bool Old_BTHome::addFloat(BtHomeType sensor, float value)
 {
   if ((_sensorDataIdx + sensor.bytecount + 1) > (MEASUREMENT_MAX_LEN))
   {
-    return false; // Not enough space for the data
+    return false; 
   }
 
   float factor = sensor.scale;
