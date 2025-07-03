@@ -156,7 +156,7 @@ void setup()
 void loop()
 {
     delay(500);
-
+    
     RUN_TEST(test_completeNameLengthSwitchover);
     RUN_TEST(test_completeName);
     RUN_TEST(test_packetLength);
