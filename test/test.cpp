@@ -16,8 +16,10 @@ String getHexString(BtHomeV2Device &btHome)
     size_t size = btHome.getAdvertisementData(buffer);
 
     String hexStr = "";
-    for (size_t i = 0; i < size; ++i) {
-        if (buffer[i] < 16) hexStr += "0";
+    for (size_t i = 0; i < size; ++i)
+    {
+        if (buffer[i] < 16)
+            hexStr += "0";
         hexStr += String(buffer[i], HEX);
     }
     hexStr.toUpperCase();
@@ -94,7 +96,7 @@ void test_addTemperature()
 {
     Serial.println("Testing BtHome getBytes method...");
     BtHomeV2Device btHome("sss", "llll", false);
-    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40",  getHexString(btHome).c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", getHexString(btHome).c_str());
     btHome.addTemperature(-22.0f, RANGE_127_RESOLUTION_1);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC4057EA", getHexString(btHome).c_str());
     btHome.addTemperature(-7.7f, RANGE_44_RESOLUTION_0_35);
@@ -108,11 +110,21 @@ void test_addTemperature()
 void test_addDistance()
 {
     BtHomeV2Device btHome("sss", "llll", false);
-    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40",  getHexString(btHome).c_str());
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", getHexString(btHome).c_str());
     btHome.addDistanceMetres(7.8);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0716D2FC40414E00", getHexString(btHome).c_str());
     btHome.addDistanceMillimetres(12);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0A16D2FC40414E00400C00", getHexString(btHome).c_str());
+}
+
+void test_addHumidity()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0416D2FC40", getHexString(btHome).c_str());
+    btHome.addHumidity_0_01(50.55f); // 41.4% humidity
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0716D2FC4003BF13", getHexString(btHome).c_str());
+    btHome.addHumidity_0_1(35.0f); // 41.4% humidity
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC4003BF132E23", getHexString(btHome).c_str());
 }
 
 void test_addCount_unsigned_integer()
@@ -156,7 +168,8 @@ void setup()
 void loop()
 {
     delay(500);
-    
+
+    RUN_TEST(test_addHumidity);
     RUN_TEST(test_completeNameLengthSwitchover);
     RUN_TEST(test_completeName);
     RUN_TEST(test_packetLength);
