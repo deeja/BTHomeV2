@@ -1,4 +1,5 @@
 # BTHomeV2
+If you are wanting the Arduino library, go to [BTHomeV2-Arduino](https://github.com/deeja/BTHomeV2-Arduino)
 
 This is the build and test repository of the repository `BTHomeV2-Arduino`.
 
