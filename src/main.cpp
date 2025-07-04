@@ -20,10 +20,9 @@ void loop()
   NimBLEDevice::init("");
   BtHomeV2Device btHome("aaa", "aaa", false);
 
-  btHome.addHumidity_0_01(50.55f); // 41.4% humidity
 
-  btHome.addHumidity_0_1(35.0f); // 41.4% humidity
-  btHome.setBatteryState(BATTERY_STATE_LOW);
+  btHome.addText("test");
+  btHome.addText("again");
 
   uint8_t buffer[MAX_PAYLOAD_SIZE];
   size_t size = btHome.getAdvertisementData(buffer);

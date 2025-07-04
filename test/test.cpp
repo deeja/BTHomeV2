@@ -156,15 +156,24 @@ void test_addCount_signed_integer()
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0E16D2FC4059EA5AEAEA5BEA0234EA", getHexString(btHome).c_str());
 }
 
-void test_state_battery(){
-    // 0x15 	battery 	uint8 (1 byte) 	1501 	0 (False = Normal) 1 (True = Low) 
+void test_state_battery()
+{
+    // 0x15 	battery 	uint8 (1 byte) 	1501 	0 (False = Normal) 1 (True = Low)
     BtHomeV2Device btHome("sss", "llll", false);
     btHome.setBatteryState(BATTERY_STATE_NORMAL);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC401500", getHexString(btHome).c_str());
 
-     BtHomeV2Device btHome2("sss", "llll", false);
+    BtHomeV2Device btHome2("sss", "llll", false);
     btHome2.setBatteryState(BATTERY_STATE_LOW);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC401501", getHexString(btHome2).c_str());
+}
+
+void test_addText()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    btHome.addText("Hello World!");
+   
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C1216D2FC40530C48656C6C6F20576F726C6421", getHexString(btHome).c_str());
 }
 
 void setup()
@@ -191,6 +200,7 @@ void loop()
 
     RUN_TEST(test_completeNameLengthReduction);
     RUN_TEST(test_state_battery);
+    RUN_TEST(test_addText);
     delay(500);
     UNITY_END(); // stop unit testing
 }
