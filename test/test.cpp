@@ -185,6 +185,15 @@ void test_addTime()
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC40505D396164", getHexString(btHome).c_str());
 }
 
+void test_addRaw()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    uint8_t array[4] = {0x00, 0x01, 0x02, 0x03};
+    btHome.addRaw(array, 4);
+                              
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0A16D2FC40540400010203", getHexString(btHome).c_str());
+}
+
 void setup()
 {
     // NOTE!!! Wait for >2 secs
@@ -197,6 +206,8 @@ void setup()
 void loop()
 {
     delay(500);
+
+    RUN_TEST(test_addRaw);
 
     RUN_TEST(test_addHumidity);
     RUN_TEST(test_completeNameLengthSwitchover);
