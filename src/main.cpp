@@ -14,15 +14,31 @@ void setup()
   delay(50);
   Serial.println("Starting BT Home Example...");
 }
+bool buttonOn = false;
 
 void loop()
 {
   NimBLEDevice::init("");
   BtHomeV2Device btHome("aaa", "aaa", false);
 
+  // btHome.eventButton(Button_Event_Status_Hold_Press);
+  if (buttonOn)
+  {
+    btHome.eventButton(Button_Event_Status_Press);
+    btHome.eventButton(Button_Event_Status_Press);
+    btHome.eventButton(Button_Event_Status_Press);
+    btHome.eventDimmer(Dimmer_Event_Status_None, 0);
 
-  uint8_t rawData[12] = {0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21};
-  btHome.addRaw(rawData, sizeof(rawData));
+  }
+  else
+  {
+     btHome.eventButton(Button_Event_Status_None);
+     btHome.eventButton(Button_Event_Status_None);
+     btHome.eventButton(Button_Event_Status_None);
+    btHome.eventDimmer(Dimmer_Event_Status_RotateLeft, 10);
+  }
+
+  buttonOn = !buttonOn;
 
   uint8_t buffer[MAX_PAYLOAD_SIZE];
   size_t size = btHome.getAdvertisementData(buffer);
@@ -38,7 +54,7 @@ void loop()
   delay(1000);
   pAdvertising->stop();
 
-  delay(1000);
+  delay(5000);
 
   Serial.println("Advertising data sent.");
 }

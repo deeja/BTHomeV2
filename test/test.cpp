@@ -172,14 +172,14 @@ void test_addText()
 {
     BtHomeV2Device btHome("sss", "llll", false);
     btHome.addText("Hello World!");
-   
+
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C1216D2FC40530C48656C6C6F20576F726C6421", getHexString(btHome).c_str());
 }
 
 void test_addTime()
 {
     BtHomeV2Device btHome("sss", "llll", false);
-    
+
     uint64_t secondsSinceEpoch = 1684093277;
     btHome.addTime(secondsSinceEpoch);
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC40505D396164", getHexString(btHome).c_str());
@@ -190,10 +190,30 @@ void test_addRaw()
     BtHomeV2Device btHome("sss", "llll", false);
     uint8_t array[4] = {0x00, 0x01, 0x02, 0x03};
     btHome.addRaw(array, 4);
-                              
+
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0A16D2FC40540400010203", getHexString(btHome).c_str());
 }
 
+void test_eventButton()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    btHome.eventButton(Button_Event_Status_Double_Press);
+
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0616D2FC403A02", getHexString(btHome).c_str());
+    btHome.eventButton(Button_Event_Status_Long_Triple_Press);
+
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0816D2FC403A023A06", getHexString(btHome).c_str());
+}
+
+void test_eventDimmer()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    btHome.eventDimmer(Dimmer_Event_Status_RotateLeft, 3);
+
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0716D2FC403C0103", getHexString(btHome).c_str());
+    btHome.eventDimmer(Dimmer_Event_Status_None, 120);
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0A16D2FC403C01033C0078", getHexString(btHome).c_str());
+}
 void setup()
 {
     // NOTE!!! Wait for >2 secs
@@ -207,6 +227,8 @@ void loop()
 {
     delay(500);
 
+    RUN_TEST(test_eventDimmer);
+    RUN_TEST(test_eventButton);
     RUN_TEST(test_addRaw);
 
     RUN_TEST(test_addHumidity);
