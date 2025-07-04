@@ -24,6 +24,10 @@ void loop()
   btHome.addText("test");
   btHome.addText("again");
 
+
+  
+  btHome.addTime(1751608563);
+
   uint8_t buffer[MAX_PAYLOAD_SIZE];
   size_t size = btHome.getAdvertisementData(buffer);
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();

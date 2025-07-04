@@ -176,6 +176,15 @@ void test_addText()
     TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C1216D2FC40530C48656C6C6F20576F726C6421", getHexString(btHome).c_str());
 }
 
+void test_addTime()
+{
+    BtHomeV2Device btHome("sss", "llll", false);
+    
+    uint64_t secondsSinceEpoch = 1684093277;
+    btHome.addTime(secondsSinceEpoch);
+    TEST_ASSERT_EQUAL_STRING("02010605096C6C6C6C0916D2FC40505D396164", getHexString(btHome).c_str());
+}
+
 void setup()
 {
     // NOTE!!! Wait for >2 secs
@@ -201,6 +210,7 @@ void loop()
     RUN_TEST(test_completeNameLengthReduction);
     RUN_TEST(test_state_battery);
     RUN_TEST(test_addText);
+    RUN_TEST(test_addTime);
     delay(500);
     UNITY_END(); // stop unit testing
 }
