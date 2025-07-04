@@ -21,12 +21,8 @@ void loop()
   BtHomeV2Device btHome("aaa", "aaa", false);
 
 
-  btHome.addText("test");
-  btHome.addText("again");
-
-
-  
-  btHome.addTime(1751608563);
+  uint8_t rawData[12] = {0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21};
+  btHome.addRaw(rawData, sizeof(rawData));
 
   uint8_t buffer[MAX_PAYLOAD_SIZE];
   size_t size = btHome.getAdvertisementData(buffer);
