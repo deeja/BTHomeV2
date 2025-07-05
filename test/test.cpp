@@ -23,6 +23,7 @@ String getHexString(BtHomeV2Device &btHome)
         hexStr += String(buffer[i], HEX);
     }
     hexStr.toUpperCase();
+    TEST_ASSERT_LESS_OR_EQUAL_MESSAGE(MAX_ADVERTISEMENT_SIZE, size, "Should be less than max advertisement size");
     return hexStr;
 }
 
@@ -220,7 +221,7 @@ void test_maxPacketSize()
         uint8_t size = btHome.getAdvertisementData(advertisementData);
         char msg[32];
         snprintf(msg, sizeof(msg), "Iteration %zu, size: %u", i, size);
-        TEST_ASSERT_LESS_THAN_MESSAGE(MAX_ADVERTISEMENT_SIZE, size, msg);
+        TEST_ASSERT_LESS_OR_EQUAL_MESSAGE(MAX_ADVERTISEMENT_SIZE, size, msg);
     }
 }
 
@@ -236,12 +237,22 @@ void test_shortAndCompleteNames()
     BtHomeV2Device btHome2b("aaaaaaaaaa", "ffffffff", false);
     TEST_ASSERT_EQUAL_STRING("020106090966666666666666660B08616161616161616161610416D2FC40", getHexString(btHome2b).c_str());
 
-
     // over limits
     BtHomeV2Device btHome3("aaa", "ffffffffffffffffffffffff", false);
     TEST_ASSERT_EQUAL_STRING("0201061509666666666666666666666666666666666666666604086161610416D2FC40", getHexString(btHome3).c_str());
     BtHomeV2Device btHome3b("aaaaaaaaaaaaaaa", "ffffffff", false);
     TEST_ASSERT_EQUAL_STRING("020106090966666666666666660B08616161616161616161610416D2FC40", getHexString(btHome3b).c_str());
+}
+
+void test_dataLengthExceeded()
+{
+    BtHomeV2Device btHome("short", "My complete device name", false);
+    uint8_t advertisementData[50];
+    size_t size = 0;
+
+    size = btHome.getAdvertisementData(advertisementData);
+
+    TEST_ASSERT_LESS_THAN(32, size);
 }
 
 void setup()
@@ -257,6 +268,7 @@ void loop()
 {
     delay(500);
 
+    RUN_TEST(test_dataLengthExceeded);
     RUN_TEST(test_shortAndCompleteNames);
     RUN_TEST(test_maxPacketSize);
 
