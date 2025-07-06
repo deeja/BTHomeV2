@@ -226,6 +226,15 @@ void test_dataLengthExceeded()
     TEST_ASSERT_LESS_THAN(32, size);
 }
 
+void test_triggerFlag(){
+
+    BtHomeV2Device btHome("aaaaaaaaa", "lllllllll", false);
+    TEST_ASSERT_EQUAL_STRING_MESSAGE("0201060416D2FC400A096C6C6C6C6C6C6C6C6C0A08616161616161616161", getHexString(btHome).c_str(), "No trigger fail");
+
+    BtHomeV2Device btHomeTrigger("aaaaaaaaa", "lllllllll", true);
+    TEST_ASSERT_EQUAL_STRING_MESSAGE("0201060416D2FC400A096C6C6C6C6C6C6C6C6C0A08616161616161616161", getHexString(btHomeTrigger).c_str(), "Trigger fail");
+}
+
 void setup()
 {
     // NOTE!!! Wait for >2 secs
@@ -239,6 +248,7 @@ void loop()
 {
     delay(500);
 
+    RUN_TEST(test_triggerFlag);
     RUN_TEST(test_dataLengthExceeded);
     RUN_TEST(test_shortAndCompleteNames);
     RUN_TEST(test_maxPacketSize);
