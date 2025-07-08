@@ -2,20 +2,41 @@
 #include <BtHomeV2Device.h>
 #include "NimBLEDevice.h"
 
-void setup()
-{
+
+// Bind key: aab3147d9822c05fe14a0c3b77d68e55
+const uint8_t key[16] = {
+  0xAA, 0xB3, 0x14, 0x7D, 0x98, 0x22, 0xC0, 0x5F,
+  0xE1, 0x4A, 0x0C, 0x3B, 0x77, 0xD6, 0x8E, 0x55
+};
+
+uint8_t _macAddress[6];
+BtHomeV2Device *btHome = nullptr;
+float _metres = 1.5f;
+
+void setup() {
   Serial.begin(115200);
   delay(50);
-  Serial.println("Starting BTHomeV2-Arduino Example...");
-}
-bool buttonOn = false;
+  Serial.println("Starting BTHomeV2-Arduino Encryption Example...");
 
-void sendAdvertisement(uint8_t advertisementData[], size_t size)
-{
+  NimBLEDevice::init("");
+  const uint8_t* mac = NimBLEDevice::getAddress().getVal();
+  memcpy(_macAddress, mac, 6);
+
+  Serial.print("Device MAC: ");
+  for (int i = 0; i < 6; i++) {
+    if (i) Serial.print(":");
+    Serial.print(_macAddress[i], HEX);
+  }
+  Serial.println();
+
+  btHome = new BtHomeV2Device("short_name", "My longer device name", false, key, _macAddress);
+}
+
+void sendAdvertisement(uint8_t advertisementData[], size_t size) {
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   NimBLEAdvertisementData pAdvData = BLEAdvertisementData();
-  std::vector<uint8_t> data(advertisementData, advertisementData + size);
 
+  std::vector<uint8_t> data(advertisementData, advertisementData + size);
   pAdvData.addData(data);
   pAdvertising->setAdvertisementData(pAdvData);
   pAdvertising->setConnectableMode(0);
@@ -26,32 +47,15 @@ void sendAdvertisement(uint8_t advertisementData[], size_t size)
   Serial.println("Stopping advertising...");
 }
 
-void loop()
-{
-
-  Serial.println("Starting example");
+void loop() {
+  btHome->clearMeasurementData();
+  btHome->addDistanceMetres(_metres++);
 
   uint8_t advertisementData[MAX_ADVERTISEMENT_SIZE];
-  size_t size = 0;
+  size_t size = btHome->getAdvertisementData(advertisementData);
 
-  NimBLEDevice::init("");
-
-  const uint8_t *mac = NimBLEDevice::getAddress().getVal();
-
-  const uint8_t AES_KEY[16] = {
-      0x23, 0x1D, 0x39, 0xC1, 0xD7, 0xCC, 0x1A, 0xB1,
-      0xAE, 0xE2, 0x24, 0xCD, 0x09, 0x6D, 0xB9, 0x32};
-
-  // Short or complete name sent based on packet size
-  BtHomeV2Device btHome("a", "b", false, AES_KEY, mac);
-
-  btHome.setPowerState(Power_Sensor_Status_On);
-  btHome.setPowerState(Power_Sensor_Status_On);
-
-  size = btHome.getAdvertisementData(advertisementData);
   sendAdvertisement(advertisementData, size);
-  btHome.clearMeasurementData();
+  Serial.println("Advertising data sent.");
 
-  Serial.println("Delaying 5 seconds");
-  delay(5000);
+  delay(5000); 
 }

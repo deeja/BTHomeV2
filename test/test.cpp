@@ -249,6 +249,7 @@ void loop()
 {
     delay(500);
 
+    RUN_TEST(test_encryptionSetCounter);
     RUN_TEST(test_encryptionPayload);
     RUN_TEST(test_encryptionCounter);
     RUN_TEST(test_triggerFlag);
