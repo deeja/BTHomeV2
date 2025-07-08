@@ -1,5 +1,6 @@
 #include "base.h"
 #include "temperature.h"
+#include "test_encryption.h"
 void setUp()
 {
     // set stuff up here
@@ -232,7 +233,7 @@ void test_triggerFlag(){
     TEST_ASSERT_EQUAL_STRING_MESSAGE("0201060416D2FC400A096C6C6C6C6C6C6C6C6C0A08616161616161616161", getHexString(btHome).c_str(), "No trigger fail");
 
     BtHomeV2Device btHomeTrigger("aaaaaaaaa", "lllllllll", true);
-    TEST_ASSERT_EQUAL_STRING_MESSAGE("0201060416D2FC400A096C6C6C6C6C6C6C6C6C0A08616161616161616161", getHexString(btHomeTrigger).c_str(), "Trigger fail");
+    TEST_ASSERT_EQUAL_STRING_MESSAGE("0201060416D2FC440A096C6C6C6C6C6C6C6C6C0A08616161616161616161", getHexString(btHomeTrigger).c_str(), "Trigger fail");
 }
 
 void setup()
@@ -248,6 +249,8 @@ void loop()
 {
     delay(500);
 
+    RUN_TEST(test_encryptionPayload);
+    RUN_TEST(test_encryptionCounter);
     RUN_TEST(test_triggerFlag);
     RUN_TEST(test_dataLengthExceeded);
     RUN_TEST(test_shortAndCompleteNames);
