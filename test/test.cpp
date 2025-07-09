@@ -77,7 +77,7 @@ void test_addDistance()
     btHome.addDistanceMetres(7.8);
     TEST_ASSERT_EQUAL_STRING("0201060716D2FC40414E00020962020861", getHexString(btHome).c_str());
     btHome.addDistanceMillimetres(12);
-    TEST_ASSERT_EQUAL_STRING("0201060A16D2FC40414E00400C00020962020861", getHexString(btHome).c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060A16D2FC40400C00414E00020962020861", getHexString(btHome).c_str());
 }
 
 void test_addHumidity()
@@ -136,7 +136,6 @@ void test_addText()
 {
     BtHomeV2Device btHome("a", "b", false);
     btHome.addText("Hello World!");
-
     TEST_ASSERT_EQUAL_STRING("0201061216D2FC40530C48656C6C6F20576F726C6421020962020861", getHexString(btHome).c_str());
 }
 

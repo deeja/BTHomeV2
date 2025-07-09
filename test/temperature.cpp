@@ -11,7 +11,8 @@ void test_addTemperature()
     btHome.addTemperature_neg44_to_44_Resolution_0_35(-7.7f);
     TEST_ASSERT_EQUAL_STRING("0201060816D2FC4057EA58EA020961020861", getHexString(btHome).c_str());
     btHome.addTemperature_neg327_to_327_Resolution_0_01(25.06f);
-    TEST_ASSERT_EQUAL_STRING("0201060B16D2FC4057EA58EA02CA09020961020861", getHexString(btHome).c_str());
+                              
+    TEST_ASSERT_EQUAL_STRING("0201060B16D2FC4002CA0957EA58EA020961020861", getHexString(btHome).c_str());
     btHome.addTemperature_neg3276_to_3276_Resolution_0_1(27.3f);
-    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4057EA58EA02CA09451101020961020861", getHexString(btHome).c_str());
+    TEST_ASSERT_EQUAL_STRING("0201060E16D2FC4002CA0945110157EA58EA020961020861", getHexString(btHome).c_str());
 }
